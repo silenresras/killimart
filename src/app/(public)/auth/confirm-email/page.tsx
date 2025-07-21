@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
 import { useAuthStore } from "../../../../store/AuthStore";
@@ -106,7 +106,7 @@ const ConfirmEmailPage = () => {
         </form>
 
         <p className="text-sm text-center text-gray-600">
-          Didn't receive it?{" "}
+          Didn&apos;  t receive it?{" "}
           <button
             onClick={() => router.push("/auth/resend-verification-email")}
             className="text-emerald-500 hover:underline"

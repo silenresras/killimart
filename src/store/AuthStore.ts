@@ -14,15 +14,14 @@ interface User {
 interface AuthStore {
   user: User | null;
   token: string | null;
-
-  setToken: (token: string) => void;
-  setUser: (user: User) => void;
-
   error: string | null;
   message: string | null;
   isAuthenticated: boolean;
   isCheckingAuth: boolean;
   isLoading: boolean;
+
+  setToken: (token: string) => void;
+  setUser: (user: User) => void;
   setIsLoading: (loading: boolean) => void;
 
   signup: (name: string, email: string, password: string) => Promise<void>;
@@ -35,12 +34,20 @@ interface AuthStore {
   clearError: () => void;
 }
 
+function hasMessage(obj: unknown): obj is { message: string } {
+  return (
+    typeof obj === "object" &&
+    obj !== null &&
+    "message" in obj &&
+    typeof (obj as Record<string, unknown>).message === "string"
+  );
+}
 
 axios.defaults.withCredentials = true;
 
 export const useAuthStore = create<AuthStore>((set) => ({
   user: null,
-  token: typeof window !== 'undefined' ? localStorage.getItem('authToken') : null, // ✅ initial load
+  token: typeof window !== "undefined" ? localStorage.getItem("authToken") : null,
   error: null,
   message: null,
   isAuthenticated: false,
@@ -48,7 +55,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
   isLoading: false,
 
   setToken: (token) => {
-    localStorage.setItem('authToken', token);
+    localStorage.setItem("authToken", token);
     set({ token });
   },
 
@@ -60,13 +67,18 @@ export const useAuthStore = create<AuthStore>((set) => ({
     try {
       const response = await auth_api.post("/signup", { name, email, password });
       localStorage.setItem("authToken", response.data.token);
-      set({ user: response.data.user, token: response.data.token, isAuthenticated: true, isLoading: false });
-    } catch (err) {
-      const error = err as AxiosError<any>;
       set({
+        user: response.data.user,
+        token: response.data.token,
+        isAuthenticated: true,
         isLoading: false,
-        error: error.response?.data?.message || error.message || "Error signing up",
       });
+    } catch (err) {
+      const error = err as AxiosError<unknown>;
+      const data = error.response?.data;
+      const message = hasMessage(data) ? data.message : error.message || "Error signing up";
+
+      set({ isLoading: false, error: message });
       throw err;
     }
   },
@@ -76,13 +88,18 @@ export const useAuthStore = create<AuthStore>((set) => ({
     try {
       const response = await auth_api.post("/login", { email, password });
       localStorage.setItem("authToken", response.data.token);
-      set({ user: response.data.user, token: response.data.token, isAuthenticated: true, isLoading: false });
-    } catch (err) {
-      const error = err as AxiosError<any>;
       set({
+        user: response.data.user,
+        token: response.data.token,
+        isAuthenticated: true,
         isLoading: false,
-        error: error.response?.data?.message || "Error signing in",
       });
+    } catch (err) {
+      const error = err as AxiosError<unknown>;
+      const data = error.response?.data;
+      const message = hasMessage(data) ? data.message : "Error signing in";
+
+      set({ isLoading: false, error: message });
       throw err;
     }
   },
@@ -109,11 +126,11 @@ export const useAuthStore = create<AuthStore>((set) => ({
         isLoading: false,
       }));
     } catch (err) {
-      const error = err as AxiosError<any>;
-      set({
-        isLoading: false,
-        error: error.response?.data?.message || "Error verifying email",
-      });
+      const error = err as AxiosError<unknown>;
+      const data = error.response?.data;
+      const message = hasMessage(data) ? data.message : "Error verifying email";
+
+      set({ isLoading: false, error: message });
       throw err;
     }
   },
@@ -161,17 +178,14 @@ export const useAuthStore = create<AuthStore>((set) => ({
       const response = await auth_api.post("/forgot-password", { email });
       set({ message: response.data.message, isLoading: false });
     } catch (err) {
-      const error = err as AxiosError<any>;
-      set({
-        isLoading: false,
-        error:
-          error.response?.data?.message ||
-          "Error sending reset password email",
-      });
+      const error = err as AxiosError<unknown>;
+      const data = error.response?.data;
+      const message = hasMessage(data) ? data.message : "Error sending reset password email";
+
+      set({ isLoading: false, error: message });
       throw err;
     }
   },
-  
 
   resetPassword: async (token, password) => {
     set({ error: null, isLoading: true });
@@ -179,11 +193,11 @@ export const useAuthStore = create<AuthStore>((set) => ({
       const response = await auth_api.post(`/reset-password/${token}`, { password });
       set({ message: response.data.message, isLoading: false });
     } catch (err) {
-      const error = err as AxiosError<any>;
-      set({
-        isLoading: false,
-        error: error.response?.data?.message || "Error resetting password",
-      });
+      const error = err as AxiosError<unknown>;
+      const data = error.response?.data;
+      const message = hasMessage(data) ? data.message : "Error resetting password";
+
+      set({ isLoading: false, error: message });
       throw err;
     }
   },

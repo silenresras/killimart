@@ -44,9 +44,10 @@ export default function ResetPasswordPage() {
       await resetPassword(`${uidb64}/${token}`, password);
       toast.success("Password reset successful!");
       setTimeout(() => router.push("/auth/login"), 2000);
-    } catch (err) {
+    } catch {
       toast.error("Failed to reset password");
     }
+    
   };
 
   return (

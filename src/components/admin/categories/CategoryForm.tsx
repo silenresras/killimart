@@ -1,20 +1,38 @@
 "use client";
 
-import { useState } from "react";
+import { useState, FormEvent } from "react";
 import { product_api } from "@/api/api";
 import toast from "react-hot-toast";
 
 export default function CategoryForm() {
-  const [name, setName] = useState("");
+  const [name, setName] = useState<string>("");
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     try {
-      const res = await product_api.post("/categories", { name });
+      await product_api.post("/categories", { name });
       toast.success("Category created");
       setName("");
-    } catch (err: any) {
-      toast.error(err.response?.data?.message || "Error creating category");
+    } catch (err: unknown) {
+      if (
+        typeof err === "object" &&
+        err !== null &&
+        "response" in err &&
+        typeof (err as { response?: unknown }).response === "object" &&
+        (err as { response?: { data?: unknown } }).response !== null &&
+        "data" in (err as { response: { data?: unknown } }).response &&
+        typeof (err as { response: { data?: object } }).response.data === "object" &&
+        (err as { response: { data?: object } }).response.data !== null &&
+        "message" in (err as { response: { data: Record<string, unknown> } }).response.data &&
+        typeof (err as { response: { data: { message?: unknown } } }).response.data.message === "string"
+      ) {
+        toast.error((err as { response: { data: { message: string } } }).response.data.message);
+      } else if (err instanceof Error) {
+        toast.error(err.message);
+      } else {
+        toast.error("Error creating category");
+      }
     }
   };
 
@@ -27,6 +45,7 @@ export default function CategoryForm() {
         value={name}
         onChange={(e) => setName(e.target.value)}
         className="border px-4 py-2 rounded w-full mb-4"
+        required
       />
       <button
         type="submit"

@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from 'next/image';
+
 
 const slides = [
   {
@@ -57,7 +59,7 @@ export default function Hero() {
             currentSlide === index ? "opacity-100 z-20" : "opacity-0 z-10"
           }`}
         >
-          <img
+          <Image
             src={slide.image}
             alt={slide.title}
             className="w-full h-full object-cover"

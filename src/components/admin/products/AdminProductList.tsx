@@ -26,7 +26,7 @@ const AdminOrderList = () => {
         setError('No token found.');
         return;
       }
-
+    
       try {
         const res = await fetch('http://localhost:7000/api/orders/admin/orders', {
           headers: {
@@ -34,19 +34,25 @@ const AdminOrderList = () => {
             'Content-Type': 'application/json',
           },
         });
-
+    
         if (!res.ok) {
           const message = await res.text();
           throw new Error(`Error ${res.status}: ${message}`);
         }
-
-        const data = await res.json();
+    
+        const data: Order[] = await res.json();
         setOrders(data);
-      } catch (err: any) {
-        setError(err.message || 'An unknown error occurred.');
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError('An unknown error occurred.');
+        }
         console.error('Fetch error:', err);
       }
+      
     };
+    
 
     fetchOrders();
   }, [token]);

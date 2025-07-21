@@ -2,11 +2,19 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 
+interface Order {
+  _id: string;
+  user: string;
+  totalAmount: number;
+  paymentStatus: 'pending' | 'paid' | 'refunded';
+  deliveryStatus: 'pending' | 'shipped' | 'delivered';
+}
+
 export default function AdminOrderDetails() {
   const params = useParams();
   const orderId = params?.id as string;
 
-  const [order, setOrder] = useState<any>(null);
+  const [order, setOrder] = useState<Order | null>(null);
   const [paymentStatus, setPaymentStatus] = useState('');
   const [deliveryStatus, setDeliveryStatus] = useState('');
 

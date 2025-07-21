@@ -1,12 +1,14 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useOrderStore } from '@/store/useOrderStore';// Adjust path if needed
+import { useOrderStore } from '@/store/useOrderStore';
 import { format } from 'date-fns';
+
+type PaymentStatus = 'all' | 'pending' | 'paid' | 'shipped';
 
 export default function OrdersPage() {
   const { fetchOrders, orders } = useOrderStore();
-  const [filter, setFilter] = useState<'all' | 'pending' | 'paid' | 'shipped'>('all');
+  const [filter, setFilter] = useState<PaymentStatus>('all');
 
   useEffect(() => {
     fetchOrders();
@@ -22,18 +24,13 @@ export default function OrdersPage() {
       <h1 className="text-2xl font-bold mb-6">My Orders</h1>
 
       {/* Filter Buttons */}
-      <div className={`
-          flex md:flex-col gap-2 md:gap-3 overflow-x-auto md:overflow-visible sm:mr-10 sm:ml-10
-          whitespace-nowrap scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 mb-3
-        `}>
+      <div className="flex md:flex-col gap-2 md:gap-3 overflow-x-auto md:overflow-visible sm:mr-10 sm:ml-10 whitespace-nowrap scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 mb-3">
         {['all', 'pending', 'paid', 'shipped'].map((status) => (
           <button
             key={status}
-            onClick={() => setFilter(status as any)}
+            onClick={() => setFilter(status as PaymentStatus)}
             className={`px-4 py-2 rounded ${
-              filter === status
-                ? 'bg-blue-600 text-white'
-                : 'bg-gray-200 text-gray-800'
+              filter === status ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-800'
             }`}
           >
             {status.charAt(0).toUpperCase() + status.slice(1)}
@@ -45,13 +42,8 @@ export default function OrdersPage() {
         <p>No orders found.</p>
       ) : (
         filteredOrders.map((order) => (
-          <div
-            key={order._id}
-            className="border p-4 rounded-md mb-6 shadow-sm bg-white"
-          >
-            <h2 className="font-semibold text-lg mb-2">
-              Order ID: {order._id}
-            </h2>
+          <div key={order._id} className="border p-4 rounded-md mb-6 shadow-sm bg-white">
+            <h2 className="font-semibold text-lg mb-2">Order ID: {order._id}</h2>
 
             <div className="mb-2">
               <strong>Date:</strong>{' '}
@@ -89,7 +81,7 @@ export default function OrdersPage() {
             <div className="mb-2">
               <strong>Items:</strong>
               <ul className="list-disc list-inside mt-1">
-                {order.items && order.items.length > 0 ? (
+                {order.items?.length > 0 ? (
                   order.items.map((item, index) => (
                     <li key={index}>
                       Product ID: {item.product} — {item.quantity} pcs @ Ksh{' '}

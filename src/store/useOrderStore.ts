@@ -1,42 +1,11 @@
 import { create } from 'zustand';
 import axios from 'axios';
+import {
+  Order,
+  PlaceOrderPayload,
+  PaymentStatus,
+} from '@/types/order';
 
-// ========== Types ==========
-// types/order.ts or wherever your types are defined
-
-export interface OrderItem {
-  product: string;
-  quantity: number;
-  price: number;
-}
-
-export interface ShippingAddress {
-  county: string;
-  subCounty: string;
-  town: string;
-  phoneNumber: string;
-  shippingFee: number;
-}
-
-export interface Order {
-  _id: string;
-  user: string;
-  items: OrderItem[];
-  shippingAddress: ShippingAddress;
-  paymentMethod: string;
-  paymentStatus: string;
-  totalAmount: number;
-  createdAt: string;
-}
-
-
-export interface PlaceOrderPayload {
-  orderItems: OrderItem[];
-  shippingAddress: ShippingAddress;
-  totalPrice: number;
-}
-
-// ========== Store Interface ==========
 interface OrderState {
   order: Order | null;
   orders: Order[];
@@ -48,27 +17,63 @@ interface OrderState {
   fetchOrders: () => Promise<void>;
   fetchOrderById: (id: string) => Promise<void>;
   fetchAllOrders: () => Promise<void>;
-  updateOrderStatus: (id: string, status: string) => Promise<void>; // ✅ Add this
+  updateOrderStatus: (id: string, status: PaymentStatus) => Promise<void>;
   resetOrderState: () => void;
 
   setIsSuccess: (success: boolean) => void;
   setError: (error: string | null) => void;
 }
 
+function isAxiosErrorWithMessage(
+  error: unknown
+): error is { response: { data: { message: string } } } {
+  if (
+    typeof error === "object" &&
+    error !== null &&
+    "response" in error
+  ) {
+    const response = (error as { response: unknown }).response;
 
-// ========== Zustand Store ==========
+    if (
+      typeof response === "object" &&
+      response !== null &&
+      "data" in response
+    ) {
+      const data = (response as { data: unknown }).data;
+
+      if (
+        typeof data === "object" &&
+        data !== null &&
+        "message" in data &&
+        typeof (data as { message: unknown }).message === "string"
+      ) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+
+
+function extractErrorMessage(error: unknown): string {
+  if (isAxiosErrorWithMessage(error)) {
+    return error.response.data.message;
+  }
+  if (error instanceof Error) return error.message;
+  return 'An unexpected error occurred.';
+}
+
 export const useOrderStore = create<OrderState>((set) => ({
   order: null,
-  orders: [], // 🆕 store all orders
+  orders: [],
   isSuccess: false,
   isLoading: false,
   error: null,
 
-  // Setters
-  setIsSuccess: (success: boolean) => set({ isSuccess: success }),
-  setError: (error: string | null) => set({ error }),
+  setIsSuccess: (success) => set({ isSuccess: success }),
+  setError: (error) => set({ error }),
 
-  // 🆕 Reset state
   resetOrderState: () =>
     set({
       order: null,
@@ -78,14 +83,13 @@ export const useOrderStore = create<OrderState>((set) => ({
       error: null,
     }),
 
-  // Place Order
   placeOrder: async (orderData) => {
     set({ isLoading: true, error: null, isSuccess: false });
     try {
       const response = await axios.post('http://localhost:7000/api/orders/', {
-        items: orderData.orderItems, // ← renamed orderItems → items
+        items: orderData.orderItems,
         shippingAddress: orderData.shippingAddress,
-        totalAmount: orderData.totalPrice, // ← renamed totalPrice → totalAmount
+        totalAmount: orderData.totalPrice,
       });
 
       set({
@@ -94,39 +98,37 @@ export const useOrderStore = create<OrderState>((set) => ({
         isLoading: false,
         error: null,
       });
-    } catch (error: any) {
+    } catch (error) {
       set({
         isLoading: false,
         isSuccess: false,
-        error: error.response?.data?.message || 'Failed to place order',
+        error: extractErrorMessage(error),
       });
     }
   },
 
-  // 🆕 Fetch all orders
   fetchOrders: async () => {
     set({ isLoading: true, error: null });
     try {
       const response = await axios.get('http://localhost:7000/api/orders/my-orders');
       set({ orders: response.data, isLoading: false });
-    } catch (error: any) {
+    } catch (error) {
       set({
         isLoading: false,
-        error: error.response?.data?.message || 'Failed to fetch orders',
+        error: extractErrorMessage(error),
       });
     }
   },
 
-  // 🆕 Fetch single order
   fetchOrderById: async (id) => {
     set({ isLoading: true, error: null });
     try {
       const response = await axios.get(`http://localhost:7000/api/orders/${id}`);
       set({ order: response.data, isLoading: false });
-    } catch (error: any) {
+    } catch (error) {
       set({
         isLoading: false,
-        error: error.response?.data?.message || 'Failed to fetch order',
+        error: extractErrorMessage(error),
       });
     }
   },
@@ -142,22 +144,21 @@ export const useOrderStore = create<OrderState>((set) => ({
       });
 
       set({ orders: response.data, isLoading: false });
-    } catch (error: any) {
+    } catch (error) {
       set({
         isLoading: false,
-        error: error.response?.data?.message || error.message || 'Failed to fetch admin orders',
+        error: extractErrorMessage(error),
       });
     }
   },
 
-  // ✅ Admin: Update Order Status
   updateOrderStatus: async (id, status) => {
     set({ isLoading: true, error: null });
     try {
       const token = localStorage.getItem('token');
       if (!token) throw new Error('No token found');
 
-      const response = await axios.put(
+      await axios.put(
         `http://localhost:7000/api/orders/admin/orders/${id}/status`,
         { status },
         {
@@ -165,7 +166,6 @@ export const useOrderStore = create<OrderState>((set) => ({
         }
       );
 
-      // Optional: Refresh orders
       set((state) => ({
         ...state,
         orders: state.orders.map((order) =>
@@ -173,13 +173,11 @@ export const useOrderStore = create<OrderState>((set) => ({
         ),
         isLoading: false,
       }));
-    } catch (error: any) {
+    } catch (error) {
       set({
         isLoading: false,
-        error: error.response?.data?.message || error.message || 'Failed to update order status',
+        error: extractErrorMessage(error),
       });
     }
   },
-
-
 }));

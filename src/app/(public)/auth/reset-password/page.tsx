@@ -24,7 +24,7 @@ const ResetPasswordPage = () => {
       await forgotPassword(email);
       toast.success("Password reset email sent!");
       router.push("/auth/request-password-submitted");
-    } catch (err) {
+    } catch {
       toast.error(error || "Failed to send reset email.");
     } finally {
       clearError(); // optional
@@ -37,7 +37,7 @@ const ResetPasswordPage = () => {
       <div className="w-full max-w-md bg-white p-6 rounded-lg shadow space-y-6">
         {/* Logo */}
         <div className="flex justify-center">
-        <img
+        <Image
             src="/images.png"
             alt="Killimart Logo"
             width={40}

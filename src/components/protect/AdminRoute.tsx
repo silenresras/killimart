@@ -11,7 +11,8 @@ export default function AdminRoute({ children }: { children: React.ReactNode }) 
   // 🔑 Trigger checkAuth on mount
   useEffect(() => {
     checkAuth();
-  }, []);
+  }, [checkAuth]);
+  
 
   useEffect(() => {
     if (!isCheckingAuth) {

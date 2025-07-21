@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { product_api } from "@/api/api";
 import toast, { Toaster } from "react-hot-toast";
 
@@ -15,7 +16,6 @@ interface AdminProductFormProps {
   productId?: string;
 }
 
-
 interface Product {
   name: string;
   brand: string;
@@ -27,16 +27,13 @@ interface Product {
   stock: string;
   category: string;
   images: (File | string)[];
-  isHotDeal: boolean,
+  isHotDeal: boolean;
 }
 
 export default function AdminProductForm({ isEdit = false, productId }: AdminProductFormProps) {
   const router = useRouter();
-  const params = useSearchParams();
-  const [initialProductName, setInitialProductName] = useState("");
 
   const [categories, setCategories] = useState<Category[]>([]);
-  const [loadingProduct, setLoadingProduct] = useState(false);
 
   const [formData, setFormData] = useState<Product>({
     name: "",
@@ -48,14 +45,13 @@ export default function AdminProductForm({ isEdit = false, productId }: AdminPro
     colors: "",
     stock: "",
     category: "",
-    images: [] as any[],
+    images: [],
     isHotDeal: false,
   });
 
   const [uploading, setUploading] = useState(false);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
 
-  // Fetch categories and product if editing
   // Fetch categories
   useEffect(() => {
     const fetchCategories = async () => {
@@ -69,11 +65,10 @@ export default function AdminProductForm({ isEdit = false, productId }: AdminPro
     fetchCategories();
   }, []);
 
-  // ✅ If isEdit is true, fetch the product details
+  // Fetch product if editing
   useEffect(() => {
     if (isEdit && productId) {
       const fetchProduct = async () => {
-        setLoadingProduct(true);
         try {
           const res = await product_api.get(`/products/${productId}`);
           const product = res.data;
@@ -91,12 +86,8 @@ export default function AdminProductForm({ isEdit = false, productId }: AdminPro
             images: product.images || [],
             isHotDeal: product.isHotDeal || false,
           });
-
-          setInitialProductName(product.name);
         } catch (err) {
           console.error("Error loading product:", err);
-        } finally {
-          setLoadingProduct(false);
         }
       };
       fetchProduct();
@@ -104,13 +95,15 @@ export default function AdminProductForm({ isEdit = false, productId }: AdminPro
   }, [isEdit, productId]);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
+    const files = e.target.files;
+    if (files) {
       setFormData((prevData) => ({
         ...prevData,
-        images: [...prevData.images, ...Array.from(e.target.files!)],
+        images: [...prevData.images, ...Array.from(files)],
       }));
     }
   };
+  
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -171,19 +164,72 @@ export default function AdminProductForm({ isEdit = false, productId }: AdminPro
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Inputs */}
-          <input type="text" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} placeholder="Product Name" className="border rounded px-3 py-2" required />
-          <input type="text" value={formData.brand} onChange={(e) => setFormData({ ...formData, brand: e.target.value })} placeholder="Brand" className="border rounded px-3 py-2" />
-          <input type="number" value={formData.price} onChange={(e) => setFormData({ ...formData, price: e.target.value })} placeholder="Price" className="border rounded px-3 py-2" required />
-          <input type="number" value={formData.discount} onChange={(e) => setFormData({ ...formData, discount: e.target.value })} placeholder="Discount" className="border rounded px-3 py-2" />
-          <input type="text" value={formData.sizes} onChange={(e) => setFormData({ ...formData, sizes: e.target.value })} placeholder="Sizes (comma separated)" className="border rounded px-3 py-2" />
-          <input type="text" value={formData.colors} onChange={(e) => setFormData({ ...formData, colors: e.target.value })} placeholder="Colors (comma separated)" className="border rounded px-3 py-2" />
-          <input type="number" value={formData.stock} onChange={(e) => setFormData({ ...formData, stock: e.target.value })} placeholder="Stock" className="border rounded px-3 py-2" required />
-          <select value={formData.category} onChange={(e) => setFormData({ ...formData, category: e.target.value })} className="border rounded px-3 py-2 bg-white" required>
+          <input
+            type="text"
+            value={formData.name}
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            placeholder="Product Name"
+            className="border rounded px-3 py-2"
+            required
+          />
+          <input
+            type="text"
+            value={formData.brand}
+            onChange={(e) => setFormData({ ...formData, brand: e.target.value })}
+            placeholder="Brand"
+            className="border rounded px-3 py-2"
+          />
+          <input
+            type="number"
+            value={formData.price}
+            onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+            placeholder="Price"
+            className="border rounded px-3 py-2"
+            required
+          />
+          <input
+            type="number"
+            value={formData.discount}
+            onChange={(e) => setFormData({ ...formData, discount: e.target.value })}
+            placeholder="Discount"
+            className="border rounded px-3 py-2"
+          />
+          <input
+            type="text"
+            value={formData.sizes}
+            onChange={(e) => setFormData({ ...formData, sizes: e.target.value })}
+            placeholder="Sizes (comma separated)"
+            className="border rounded px-3 py-2"
+          />
+          <input
+            type="text"
+            value={formData.colors}
+            onChange={(e) => setFormData({ ...formData, colors: e.target.value })}
+            placeholder="Colors (comma separated)"
+            className="border rounded px-3 py-2"
+          />
+          <input
+            type="number"
+            value={formData.stock}
+            onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
+            placeholder="Stock"
+            className="border rounded px-3 py-2"
+            required
+          />
+          <select
+            value={formData.category}
+            onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+            className="border rounded px-3 py-2 bg-white"
+            required
+          >
             <option value="">Select Category</option>
             {categories.map((c) => (
-              <option key={c._id} value={c._id}>{c.name}</option>
+              <option key={c._id} value={c._id}>
+                {c.name}
+              </option>
             ))}
           </select>
+
           <div className="flex items-center gap-2 mt-2">
             <input
               type="checkbox"
@@ -192,30 +238,52 @@ export default function AdminProductForm({ isEdit = false, productId }: AdminPro
               id="hot-deal"
               className="accent-blue-600"
             />
-            <label htmlFor="hot-deal" className="text-sm font-medium">Mark as Hot Deal</label>
+            <label htmlFor="hot-deal" className="text-sm font-medium">
+              Mark as Hot Deal
+            </label>
           </div>
-
         </div>
 
-        <textarea rows={4} value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} placeholder="Product Description" className="w-full border rounded px-3 py-2" required />
+        <textarea
+          rows={4}
+          value={formData.description}
+          onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+          placeholder="Product Description"
+          className="w-full border rounded px-3 py-2"
+          required
+        />
 
         <div>
           <input type="file" accept="image/*" multiple onChange={handleImageChange} />
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
             {formData.images.map((img, i) => (
               <div key={i} className="relative">
-                <img
-                  src={typeof img === "string" ? img : URL.createObjectURL(img)}
-                  className="w-full h-24 object-cover rounded"
-                  onClick={() => setPreviewImage(typeof img === "string" ? img : URL.createObjectURL(img))}
-                />
+                {typeof img === "string" ? (
+                  <Image
+                    src={img}
+                    alt={`Product image ${i + 1}`}
+                    width={200}
+                    height={200}
+                    className="rounded object-cover"
+                    onClick={() => setPreviewImage(img)}
+                  />
+                ) : (
+                  <Image
+                    src={URL.createObjectURL(img)}
+                    alt={`Product preview ${i + 1}`}
+                    className="w-full h-24 object-cover rounded cursor-pointer"
+                    onClick={() => setPreviewImage(URL.createObjectURL(img))}
+                  />
+                )}
                 <button
                   type="button"
                   className="absolute top-1 right-1 bg-red-600 text-white rounded-full p-1 text-xs"
-                  onClick={() => setFormData((prev) => ({
-                    ...prev,
-                    images: prev.images.filter((_, idx) => idx !== i),
-                  }))}
+                  onClick={() =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      images: prev.images.filter((_, idx) => idx !== i),
+                    }))
+                  }
                 >
                   ✕
                 </button>
@@ -226,8 +294,19 @@ export default function AdminProductForm({ isEdit = false, productId }: AdminPro
 
         {previewImage && (
           <div className="fixed inset-0 bg-black bg-opacity-80 z-50 flex items-center justify-center">
-            <img src={previewImage} className="max-w-[90%] max-h-[90%]" />
-            <button className="absolute top-4 right-4 text-white" onClick={() => setPreviewImage(null)}>✕</button>
+            <Image
+              src={previewImage}
+              alt="Preview"
+              width={600}
+              height={600}
+              className="max-w-[90%] max-h-[90%]"
+            />
+            <button
+              className="absolute top-4 right-4 text-white text-3xl font-bold"
+              onClick={() => setPreviewImage(null)}
+            >
+              ✕
+            </button>
           </div>
         )}
 
@@ -242,8 +321,3 @@ export default function AdminProductForm({ isEdit = false, productId }: AdminPro
     </div>
   );
 }
-
-
-
-
-

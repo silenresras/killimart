@@ -4,6 +4,7 @@ import Link from "next/link";
 import { FaSearch, FaShoppingCart, FaUser, FaBars, FaTimes } from "react-icons/fa";
 import { useEffect, useRef, useState } from "react";
 import { useAuthStore } from "@/store/AuthStore";
+import Image from "next/image";
 
 export default function Navbar() {
   const [search, setSearch] = useState("");
@@ -17,7 +18,7 @@ export default function Navbar() {
     checkAuth();
     const cart = JSON.parse(localStorage.getItem("cart") || "[]");
     setCartCount(cart.length);
-  }, []);
+  }, [checkAuth]);
 
   // Handle click outside of drawer
   useEffect(() => {
@@ -48,7 +49,7 @@ export default function Navbar() {
       <div className="flex items-center justify-between px-6 py-4 border-b gap-4">
         {/* Logo */}
         <div className="flex items-center gap-2">
-          <img
+          <Image
             src="/images.png"
             alt="Killimart Logo"
             width={40}
@@ -123,7 +124,7 @@ export default function Navbar() {
             {/* Drawer Header (non-scrollable) */}
             <div className="flex justify-between items-center p-4 border-b">
               <div className="flex items-center gap-2">
-                <img
+                <Image
                   src="/images.png"
                   alt="Killimart Logo"
                   className="w-8 h-8 filter hue-rotate-[140deg] saturate-50 transition-transform hover:scale-105"

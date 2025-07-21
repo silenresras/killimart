@@ -1,12 +1,16 @@
-// src/components/admin/categories/AdminCategoryList.tsx
 "use client";
 
 import { useEffect, useState } from "react";
 import { product_api } from "@/api/api";
 import toast from "react-hot-toast";
 
+type Category = {
+  _id: string;
+  name: string;
+};
+
 export default function AdminCategoryList({ refresh }: { refresh: boolean }) {
-  const [categories, setCategories] = useState<any[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
 
   const fetchCategories = async () => {
     try {

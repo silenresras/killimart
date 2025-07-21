@@ -14,6 +14,27 @@ interface Order {
   deliveryStatus: string;
 }
 
+function getErrorMessage(error: unknown): string {
+  // Narrow error safely without `any`
+  if (
+    typeof error === "object" &&
+    error !== null &&
+    "response" in error &&
+    typeof (error as { response?: unknown }).response === "object" &&
+    (error as { response?: object }).response !== null &&
+    "data" in (error as { response: object }).response &&
+    typeof (error as { response: { data?: unknown } }).response.data === "object" &&
+    (error as { response: { data?: object } }).response.data !== null &&
+    "message" in (error as { response: { data: Record<string, unknown> } }).response.data &&
+    typeof (error as { response: { data: { message?: unknown } } }).response.data.message === "string"
+  ) {
+    return (error as { response: { data: { message: string } } }).response.data.message;
+  } else if (error instanceof Error) {
+    return error.message;
+  }
+  return "An unknown error occurred";
+}
+
 export default function AdminOrderList() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
@@ -33,14 +54,19 @@ export default function AdminOrderList() {
 
         console.log("✅ Fetched orders:", response.data);
         setOrders(response.data.orders || response.data); // support both shaped responses
-      } catch (error: any) {
-        console.error("❌ Error fetching orders:", error?.response?.data || error.message);
+      } catch (error) {
+        console.error("❌ Error fetching orders:", getErrorMessage(error));
+        toast.error(getErrorMessage(error));
       } finally {
         setLoading(false);
       }
     };
 
-    fetchOrders();
+    if (token) {
+      fetchOrders();
+    } else {
+      setLoading(false);
+    }
   }, [token]);
 
   const updateStatus = async (
@@ -83,13 +109,9 @@ export default function AdminOrderList() {
             : order
         )
       );
-    } catch (error: any) {
-      toast.error("Failed to update status");
-      console.error("❌ Error updating status:", {
-        url,
-        orderId,
-        error: error?.response?.data || error.message,
-      });
+    } catch (error) {
+      console.error("❌ Error updating order status:", getErrorMessage(error));
+      toast.error(getErrorMessage(error));
     }
   };
 

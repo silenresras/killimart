@@ -1,4 +1,3 @@
-// src/components/admin/categories/AdminCategoryForm.tsx
 "use client";
 
 import { product_api } from "@/api/api";
@@ -15,12 +14,17 @@ export default function AdminCategoryForm({ onCategoryAdded }: { onCategoryAdded
 
     try {
       setIsLoading(true);
-      const response = await product_api.post("/categories", { name });
+      await product_api.post("/categories", { name });
       toast.success("Category created");
       setName("");
       onCategoryAdded();
-    } catch (err: any) {
-      toast.error(err?.response?.data?.message || "Error creating category");
+    } catch (err: unknown) {
+      if (err && typeof err === "object" && "response" in err) {
+        const axiosErr = err as { response?: { data?: { message?: string } } };
+        toast.error(axiosErr.response?.data?.message || "Error creating category");
+      } else {
+        toast.error("Unknown error occurred");
+      }
     } finally {
       setIsLoading(false);
     }

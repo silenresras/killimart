@@ -7,6 +7,16 @@ import { toast } from "react-hot-toast";
 import ShippingForm from "@/components/forms/ShippingForm";
 import { useShippingStore } from "@/store/useShippingStore";
 
+interface Address {
+  _id?: string;
+  county: string;
+  subCounty: string;
+  town: string;
+  phoneNumber: string;
+  isDefault: boolean;
+  shippingFee?: number;
+}
+
 export default function OverviewPage() {
   const {
     addresses,
@@ -18,7 +28,7 @@ export default function OverviewPage() {
   } = useShippingStore();
 
   const [modalOpen, setModalOpen] = useState(false);
-  const [formAddress, setFormAddress] = useState({
+  const [formAddress, setFormAddress] = useState<Address>({
     county: "",
     subCounty: "",
     town: "",
@@ -33,7 +43,7 @@ export default function OverviewPage() {
     fetchAddresses();
   }, [fetchAddresses]);
 
-  const openModal = (address?: any) => {
+  const openModal = (address?: Address) => {
     if (address) {
       setFormAddress({
         county: address.county,
@@ -42,7 +52,7 @@ export default function OverviewPage() {
         phoneNumber: address.phoneNumber,
         isDefault: address.isDefault,
       });
-      setEditingId(address._id);
+      setEditingId(address._id ?? null);
     } else {
       setFormAddress({
         county: "",
@@ -77,7 +87,7 @@ export default function OverviewPage() {
       });
       toast.success(editingId ? "Address updated" : "Address added");
       closeModal();
-    } catch (err) {
+    } catch {
       toast.error("Failed to save address");
     } finally {
       setIsSaving(false);
@@ -127,11 +137,21 @@ export default function OverviewPage() {
             key={addr._id}
             className="border p-4 rounded mb-3 bg-white shadow"
           >
-            <p><strong>County:</strong> {addr.county}</p>
-            <p><strong>Sub-County:</strong> {addr.subCounty}</p>
-            <p><strong>Town:</strong> {addr.town}</p>
-            <p><strong>Phone:</strong> {addr.phoneNumber}</p>
-            <p><strong>Shipping Fee:</strong> KES {addr.shippingFee || 300}</p>
+            <p>
+              <strong>County:</strong> {addr.county}
+            </p>
+            <p>
+              <strong>Sub-County:</strong> {addr.subCounty}
+            </p>
+            <p>
+              <strong>Town:</strong> {addr.town}
+            </p>
+            <p>
+              <strong>Phone:</strong> {addr.phoneNumber}
+            </p>
+            <p>
+              <strong>Shipping Fee:</strong> KES {addr.shippingFee || 300}
+            </p>
 
             <div className="flex items-center gap-2 mt-2">
               {!addr.isDefault ? (
@@ -167,16 +187,11 @@ export default function OverviewPage() {
                 setFormAddress((prev) => ({
                   ...prev,
                   ...updatedAddress,
-                  isDefault: updatedAddress.isDefault ?? false, // ✅ ensures boolean
+                  isDefault: updatedAddress.isDefault ?? false,
                 }))
               }
-              
               onSave={handleSave}
-              onDelete={
-                editingId
-                  ? () => handleDelete(editingId)
-                  : undefined
-              }
+              onDelete={editingId ? () => handleDelete(editingId) : undefined}
               isSaving={isSaving}
             />
             <div className="mt-4 flex justify-end">
