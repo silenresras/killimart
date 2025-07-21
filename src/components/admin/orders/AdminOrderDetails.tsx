@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
+import { order_api } from '@/api/api';
 
 interface Order {
   _id: string;
@@ -20,34 +21,38 @@ export default function AdminOrderDetails() {
 
   useEffect(() => {
     const fetchOrder = async () => {
-      const res = await fetch(`http://localhost:7000/api/orders/${orderId}`);
-      const data = await res.json();
-      setOrder(data);
-      setPaymentStatus(data.paymentStatus);
-      setDeliveryStatus(data.deliveryStatus);
+      try {
+        const res = await order_api.get(`/${orderId}`);
+        const data = res.data;
+  
+        setOrder(data);
+        setPaymentStatus(data.paymentStatus);
+        setDeliveryStatus(data.deliveryStatus);
+      } catch (error) {
+        console.error("Error fetching order:", error);
+        // Optionally set error state or display toast
+      }
     };
-
-    fetchOrder();
+  
+    if (orderId) {
+      fetchOrder();
+    }
   }, [orderId]);
 
   const updateField = async (field: string, value: string) => {
-    const body = { [field]: value };
+  const body = { [field]: value };
 
-    const res = await fetch(`http://localhost:7000/api/orders/admin/orders/${orderId}/status`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-    });
+  try {
+    await order_api.patch(`/admin/orders/${orderId}/status`, body);
+    alert(`${field} updated!`);
+  } catch (error: any) {
+    const message =
+      error.response?.data?.message || error.message || "Something went wrong";
+    alert(`Error: ${message}`);
+  }
+};
 
-    if (res.ok) {
-      alert(`${field} updated!`);
-    } else {
-      const error = await res.json();
-      alert(`Error: ${error.message}`);
-    }
-  };
-
-  if (!order) return <div>Loading...</div>;
+  {if (!order) return <div>Loading...</div>;}
 
   return (
     <div className="p-4">

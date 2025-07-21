@@ -1,5 +1,6 @@
 import { create } from 'zustand';
-import axios from 'axios';
+import { order_api } from '@/api/api';
+
 import {
   Order,
   PlaceOrderPayload,
@@ -86,7 +87,7 @@ export const useOrderStore = create<OrderState>((set) => ({
   placeOrder: async (orderData) => {
     set({ isLoading: true, error: null, isSuccess: false });
     try {
-      const response = await axios.post('http://localhost:7000/api/orders/', {
+      const response = await order_api.post('/', {
         items: orderData.orderItems,
         shippingAddress: orderData.shippingAddress,
         totalAmount: orderData.totalPrice,
@@ -110,7 +111,7 @@ export const useOrderStore = create<OrderState>((set) => ({
   fetchOrders: async () => {
     set({ isLoading: true, error: null });
     try {
-      const response = await axios.get('http://localhost:7000/api/orders/my-orders');
+      const response = await order_api.get('/my-orders');
       set({ orders: response.data, isLoading: false });
     } catch (error) {
       set({
@@ -123,7 +124,7 @@ export const useOrderStore = create<OrderState>((set) => ({
   fetchOrderById: async (id) => {
     set({ isLoading: true, error: null });
     try {
-      const response = await axios.get(`http://localhost:7000/api/orders/${id}`);
+      const response = await order_api.get(`/${id}`);
       set({ order: response.data, isLoading: false });
     } catch (error) {
       set({
@@ -139,7 +140,7 @@ export const useOrderStore = create<OrderState>((set) => ({
       const token = localStorage.getItem('token');
       if (!token) throw new Error('No token found');
 
-      const response = await axios.get('http://localhost:7000/api/orders/admin/orders', {
+      const response = await order_api.get('/admin/orders', {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -158,8 +159,8 @@ export const useOrderStore = create<OrderState>((set) => ({
       const token = localStorage.getItem('token');
       if (!token) throw new Error('No token found');
 
-      await axios.put(
-        `http://localhost:7000/api/orders/admin/orders/${id}/status`,
+      await order_api.put(
+        `/admin/orders/${id}/status`,
         { status },
         {
           headers: { Authorization: `Bearer ${token}` },
