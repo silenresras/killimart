@@ -16,6 +16,10 @@
 # next.js
 /.next/
 /out/
+# Environment variables
+.env
+.env.*
+!.env.example
 
 # production
 /build
