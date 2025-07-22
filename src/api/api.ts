@@ -2,7 +2,7 @@
 import axios from "axios";
 
 // ✅ Use process.env instead of import.meta.env in Next.js
-const BASE_API_URL = process.env.NEXT_PUBLIC_API_URL;
+const BASE_API_URL = "https://killimart-online-backend.onrender.com/api";;
 
 if (!BASE_API_URL) {
   throw new Error(" NEXT_PUBLIC_API_URL is not defined in your environment variables.");
