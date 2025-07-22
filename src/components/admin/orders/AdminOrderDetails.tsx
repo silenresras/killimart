@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { order_api } from '@/api/api';
+import { AxiosError } from 'axios';
 
 interface Order {
   _id: string;
@@ -28,9 +29,11 @@ export default function AdminOrderDetails() {
         setOrder(data);
         setPaymentStatus(data.paymentStatus);
         setDeliveryStatus(data.deliveryStatus);
-      } catch (error) {
-        console.error("Error fetching order:", error);
-        // Optionally set error state or display toast
+      }  catch (error: unknown) {
+        const err = error as AxiosError<{ message: string }>;
+        const message =
+          err.response?.data?.message || err.message || "Something went wrong";
+        alert(`Error: ${message}`);
       }
     };
   
@@ -45,9 +48,10 @@ export default function AdminOrderDetails() {
   try {
     await order_api.patch(`/admin/orders/${orderId}/status`, body);
     alert(`${field} updated!`);
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const err = error as AxiosError<{ message: string }>;
     const message =
-      error.response?.data?.message || error.message || "Something went wrong";
+      err.response?.data?.message || err.message || "Something went wrong";
     alert(`Error: ${message}`);
   }
 };
