@@ -138,18 +138,8 @@ export const useAuthStore = create<AuthStore>((set) => ({
   checkAuth: async () => {
     set({ isCheckingAuth: true, error: null });
 
-    const token = localStorage.getItem("authToken");
-    if (!token) {
-      console.log("No token found");
-      set({ isCheckingAuth: false, isAuthenticated: false });
-      return;
-    }
-
     try {
-      const response = await auth_api.get("/check-auth", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
+      const response = await auth_api.get("/check-auth");  // no headers override
       if (response.data.isAuthenticated) {
         set({
           isAuthenticated: true,
@@ -171,6 +161,8 @@ export const useAuthStore = create<AuthStore>((set) => ({
       });
     }
   },
+
+
 
   forgotPassword: async (email) => {
     set({ error: null, isLoading: true });
