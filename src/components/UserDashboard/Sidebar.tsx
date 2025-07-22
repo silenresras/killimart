@@ -7,7 +7,7 @@ import { useAuthStore } from "@/store/AuthStore";
 import clsx from "clsx";
 
 const links = [
-  { href: "/myaccount/overview", label: "Account Overview" },
+  { href: "/myaccount/overview", label: "Overview" },
   { href: "/myaccount/orders", label: "Orders" },
   { href: "/myaccount/shipments", label: "Shipments" },
   { href: "/myaccount/reviews", label: "Reviews" },

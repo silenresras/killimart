@@ -55,15 +55,19 @@ export default function Hero() {
       {slides.map((slide, index) => (
         <div
           key={`${slide.title}-${index}`}
-          className={`absolute inset-0 w-full h-full transition-opacity duration-1000 ease-in-out ${
-            currentSlide === index ? "opacity-100 z-20" : "opacity-0 z-10"
-          }`}
+          className={`absolute inset-0 w-full h-full transition-opacity duration-1000 ease-in-out ${currentSlide === index ? "opacity-100 z-20" : "opacity-0 z-10"
+            }`}
         >
-          <Image
-            src={slide.image}
-            alt={slide.title}
-            className="w-full h-full object-cover"
-          />
+          <div className="relative w-full h-[80vh]">
+            <Image
+              src={slide.image}
+              alt={slide.title}
+              className="object-cover"
+              fill
+              priority
+            />
+          </div>
+
           <div className="absolute inset-0 bg-emerald-900/60" />
           <div className="absolute inset-0 flex flex-col justify-center items-center text-white px-4 text-center">
             <h1 className="text-2xl md:text-4xl font-bold mb-2">{slide.title}</h1>
@@ -81,9 +85,8 @@ export default function Hero() {
               setCurrentSlide(index);
               slideRef.current = index; // Sync ref
             }}
-            className={`h-2 w-2 rounded-full transition-all duration-300 ${
-              currentSlide === index ? "bg-emerald-400 w-4" : "bg-white/60"
-            }`}
+            className={`h-2 w-2 rounded-full transition-all duration-300 ${currentSlide === index ? "bg-emerald-400 w-4" : "bg-white/60"
+              }`}
           />
         ))}
       </div>
