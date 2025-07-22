@@ -15,7 +15,6 @@ interface Order {
 }
 
 function getErrorMessage(error: unknown): string {
-  // Narrow error safely without `any`
   if (
     typeof error === "object" &&
     error !== null &&
@@ -38,22 +37,16 @@ function getErrorMessage(error: unknown): string {
 export default function AdminOrderList() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
-  const token = useAuthStore((state) => state.token);
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const url = `${process.env.NEXT_PUBLIC_API_URL}/orders/admin/orders`;
-        console.log("🔄 Fetching orders from:", url);
+        console.log("🔄 Fetching orders via order_api...");
+        const response = await order_api.get("/admin/orders");
+        console.log("✅ Orders fetched:", response.data);
 
-        const response = await order_api.get(url, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        console.log("✅ Fetched orders:", response.data);
-        setOrders(response.data.orders || response.data); // support both shaped responses
+        setOrders(response.data.orders || response.data);
       } catch (error) {
         console.error("❌ Error fetching orders:", getErrorMessage(error));
         toast.error(getErrorMessage(error));
@@ -62,51 +55,29 @@ export default function AdminOrderList() {
       }
     };
 
-    if (token) {
+    if (isAuthenticated) {
       fetchOrders();
     } else {
       setLoading(false);
     }
-  }, [token]);
+  }, [isAuthenticated]);
 
   const updateStatus = async (
     orderId: string,
     newPaymentStatus?: string,
     newDeliveryStatus?: string
   ) => {
-    const url = `${process.env.NEXT_PUBLIC_API_URL}/orders/admin/orders/${orderId}/status`;
-
     const body: Record<string, string> = {};
     if (newPaymentStatus) body.paymentStatus = newPaymentStatus;
     if (newDeliveryStatus) body.deliveryStatus = newDeliveryStatus;
 
-    console.log("🔄 Updating order:", {
-      orderId,
-      newPaymentStatus,
-      newDeliveryStatus,
-      body,
-      url,
-    });
-
     try {
-      const response = await order_api.patch(url, body, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      console.log("✅ Update response:", response.data);
+      await order_api.patch(`/admin/orders/${orderId}/status`, body);
       toast.success("Order status updated");
 
-      // Refresh updated order locally
       setOrders((prevOrders) =>
         prevOrders.map((order) =>
-          order._id === orderId
-            ? {
-                ...order,
-                ...body,
-              }
-            : order
+          order._id === orderId ? { ...order, ...body } : order
         )
       );
     } catch (error) {
@@ -114,6 +85,7 @@ export default function AdminOrderList() {
       toast.error(getErrorMessage(error));
     }
   };
+
 
   if (loading) return <div>Loading orders...</div>;
 

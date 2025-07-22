@@ -2,103 +2,148 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useAuthStore } from '@/store/AuthStore'; // adjust path if needed
+import Image from 'next/image';
+import { product_api } from '@/api/api';
+import toast from 'react-hot-toast';
 
-interface Order {
+interface Product {
   _id: string;
-  user?: {
-    name: string;
-  };
-  totalPrice: number;
-  isPaid: boolean;
-  isDelivered: boolean;
-  createdAt: string;
+  name: string;
+  price: number;
+  stock: number;
+  images: string[];
+  isHotDeal: boolean;
 }
 
-const AdminOrderList = () => {
-  const token = useAuthStore((state) => state.token);
-  const [orders, setOrders] = useState<Order[]>([]);
+function getErrorMessage(error: unknown): string {
+  if (
+    typeof error === "object" &&
+    error !== null &&
+    "response" in error &&
+    typeof (error as { response?: unknown }).response === "object" &&
+    (error as { response?: object }).response !== null &&
+    "data" in (error as { response: object }).response &&
+    typeof (error as { response: { data?: unknown } }).response.data === "object" &&
+    (error as { response: { data?: object } }).response.data !== null &&
+    "message" in (error as { response: { data: Record<string, unknown> } }).response.data &&
+    typeof (error as { response: { data: { message?: unknown } } }).response.data.message === "string"
+  ) {
+    return (error as { response: { data: { message: string } } }).response.data.message;
+  } else if (error instanceof Error) {
+    return error.message;
+  }
+  return "An unknown error occurred";
+}
+
+
+export default function AdminProductList() {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchOrders = async () => {
-      if (!token) {
-        setError('No token found.');
-        return;
-      }
-    
+    const fetchProducts = async () => {
       try {
-        const res = await fetch('http://localhost:7000/api/orders/admin/orders', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
+        const res = await product_api.get('/products', {
+          withCredentials: true,
         });
-    
-        if (!res.ok) {
-          const message = await res.text();
-          throw new Error(`Error ${res.status}: ${message}`);
-        }
-    
-        const data: Order[] = await res.json();
-        setOrders(data);
-      } catch (err: unknown) {
-        if (err instanceof Error) {
-          setError(err.message);
-        } else {
-          setError('An unknown error occurred.');
-        }
-        console.error('Fetch error:', err);
-      }
+        setProducts(res.data);
+     } catch (err: unknown) {
+        setError(getErrorMessage(err));
+        console.error(err);
       
+      } finally {
+        setLoading(false);
+      }
     };
-    
 
-    fetchOrders();
-  }, [token]);
+    fetchProducts();
+  }, []);
+
+  const handleDelete = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this product?')) return;
+
+    try {
+      await product_api.delete(`/products/${id}`, { withCredentials: true });
+      setProducts((prev) => prev.filter((p) => p._id !== id));
+      toast.success('Product deleted');
+   } catch (err: unknown) {
+      toast.error(getErrorMessage(err));
+      console.error(err);
+    }
+    
+  };
+
+  if (loading) return <p className="text-center py-10">Loading products...</p>;
+  if (error) return <p className="text-red-500 text-center py-10">{error}</p>;
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold mb-6">All Orders (Admin)</h1>
-      {error && <p className="text-red-500 mb-4">{error}</p>}
-      <table className="w-full border">
-        <thead>
-          <tr className="bg-gray-100">
-            <th className="p-2">Order ID</th>
-            <th className="p-2">User</th>
-            <th className="p-2">Date</th>
-            <th className="p-2">Total</th>
-            <th className="p-2">Paid</th>
-            <th className="p-2">Delivered</th>
-            <th className="p-2">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {orders.map((order) => (
-            <tr key={order._id}>
-              <td className="p-2">{order._id}</td>
-              <td className="p-2">{order.user?.name || 'Unknown'}</td>
-              <td className="p-2">
-                {order.createdAt
-                  ? new Date(order.createdAt).toLocaleDateString()
-                  : 'Unknown'}
-              </td>
-              <td className="p-2">
-                KES {typeof order.totalPrice === 'number' ? order.totalPrice.toLocaleString() : '0'}
-              </td>
-              <td className="p-2">{order.isPaid ? '✅' : '❌'}</td>
-              <td className="p-2">{order.isDelivered ? '✅' : '❌'}</td>
-              <td className="p-2">
-                <Link href={`/admin/orders/${order._id}`} className="text-blue-500 underline">
-                  View
-                </Link>
-              </td>
+    <div className="p-6 overflow-x-auto">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">Admin Products</h1>
+        <Link
+          href="/admin/products/create"
+          className="bg-emerald-600 text-white px-4 py-2 rounded hover:bg-emerald-500"
+        >
+          + Create New
+        </Link>
+      </div>
+
+      {products.length === 0 ? (
+        <p className="text-gray-500 text-center">No products found.</p>
+      ) : (
+        <table className="min-w-full border border-gray-200 text-sm">
+          <thead className="bg-gray-100 text-left">
+            <tr>
+              <th className="p-3">Image</th>
+              <th className="p-3">Name</th>
+              <th className="p-3">Price (KES)</th>
+              <th className="p-3">Stock</th>
+              <th className="p-3">Hot Deal</th>
+              <th className="p-3">Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {products.map((product) => (
+              <tr key={product._id} className="border-t hover:bg-gray-50">
+                <td className="p-3">
+                  <Image
+                    src={product.images[0]}
+                    alt={product.name}
+                    width={50}
+                    height={50}
+                    className="rounded object-cover"
+                  />
+                </td>
+                <td className="p-3">{product.name}</td>
+                <td className="p-3">{product.price.toLocaleString()}</td>
+                <td className="p-3">{product.stock}</td>
+                <td className="p-3">
+                  {product.isHotDeal ? (
+                    <span className="text-red-500 font-semibold">Yes</span>
+                  ) : (
+                    'No'
+                  )}
+                </td>
+                <td className="p-3 space-x-2">
+                  <Link
+                    href={`/admin/products/${product._id}/edit`}
+                    className="text-blue-600 hover:underline"
+                  >
+                    Edit
+                  </Link>
+                  <button
+                    onClick={() => handleDelete(product._id)}
+                    className="text-red-500 hover:underline"
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
   );
-};
-
-export default AdminOrderList;
+}

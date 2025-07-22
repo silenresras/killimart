@@ -16,8 +16,9 @@ export default function OrdersPage() {
 
   const filteredOrders = orders.filter((order) => {
     if (filter === 'all') return true;
-    return order.paymentStatus === filter;
+    return order.paymentStatus.toLowerCase() === filter;
   });
+  
 
   return (
     <div className="p-4">
