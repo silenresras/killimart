@@ -125,6 +125,8 @@ export default function Navbar() {
             <div className="flex justify-between items-center p-4 border-b">
               <div className="flex items-center gap-2">
                 <Image
+                width={40}
+                height={40}
                   src="/images.png"
                   alt="Killimart Logo"
                   className="w-8 h-8 filter hue-rotate-[140deg] saturate-50 transition-transform hover:scale-105"

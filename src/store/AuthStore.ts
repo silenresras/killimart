@@ -2,7 +2,7 @@ import { create } from "zustand";
 import axios, { AxiosError } from "axios";
 import { auth_api } from "@/api/api";
 
-// Types for User and Store State
+// Types
 interface User {
   _id: string;
   name: string;
@@ -13,14 +13,12 @@ interface User {
 
 interface AuthStore {
   user: User | null;
-  token: string | null;
   error: string | null;
   message: string | null;
   isAuthenticated: boolean;
   isCheckingAuth: boolean;
   isLoading: boolean;
 
-  setToken: (token: string) => void;
   setUser: (user: User) => void;
   setIsLoading: (loading: boolean) => void;
 
@@ -43,21 +41,15 @@ function hasMessage(obj: unknown): obj is { message: string } {
   );
 }
 
-axios.defaults.withCredentials = true;
+axios.defaults.withCredentials = true; // ✅ Ensure cookies are sent
 
 export const useAuthStore = create<AuthStore>((set) => ({
   user: null,
-  token: typeof window !== "undefined" ? localStorage.getItem("authToken") : null,
   error: null,
   message: null,
   isAuthenticated: false,
   isCheckingAuth: true,
   isLoading: false,
-
-  setToken: (token) => {
-    localStorage.setItem("authToken", token);
-    set({ token });
-  },
 
   setUser: (user) => set({ user }),
   setIsLoading: (loading) => set({ isLoading: loading }),
@@ -66,10 +58,8 @@ export const useAuthStore = create<AuthStore>((set) => ({
     set({ error: null, isLoading: true });
     try {
       const response = await auth_api.post("/signup", { name, email, password });
-      localStorage.setItem("authToken", response.data.token);
       set({
         user: response.data.user,
-        token: response.data.token,
         isAuthenticated: true,
         isLoading: false,
       });
@@ -87,17 +77,15 @@ export const useAuthStore = create<AuthStore>((set) => ({
     set({ error: null, isLoading: true });
     try {
       const response = await auth_api.post("/login", { email, password });
-      localStorage.setItem("authToken", response.data.token);
       set({
         user: response.data.user,
-        token: response.data.token,
         isAuthenticated: true,
         isLoading: false,
       });
     } catch (err) {
       const error = err as AxiosError<unknown>;
       const data = error.response?.data;
-      const message = hasMessage(data) ? data.message : "Error signing in";
+      const message = hasMessage(data) ? data.message : "Error logging in";
 
       set({ isLoading: false, error: message });
       throw err;
@@ -108,8 +96,11 @@ export const useAuthStore = create<AuthStore>((set) => ({
     set({ isLoading: true, error: null });
     try {
       await auth_api.post("/logout");
-      localStorage.removeItem("authToken");
-      set({ user: null, token: null, isAuthenticated: false, isLoading: false });
+      set({
+        user: null,
+        isAuthenticated: false,
+        isLoading: false,
+      });
     } catch {
       set({ error: "Error logging out", isLoading: false });
     }
@@ -137,13 +128,13 @@ export const useAuthStore = create<AuthStore>((set) => ({
 
   checkAuth: async () => {
     set({ isCheckingAuth: true, error: null });
-
     try {
-      const response = await auth_api.get("/check-auth");  // no headers override
+      const response = await auth_api.get("/check-auth");
+
       if (response.data.isAuthenticated) {
         set({
-          isAuthenticated: true,
           user: response.data.user,
+          isAuthenticated: true,
           isCheckingAuth: false,
         });
       } else {
@@ -153,16 +144,16 @@ export const useAuthStore = create<AuthStore>((set) => ({
           isCheckingAuth: false,
         });
       }
-    } catch {
+    } catch (err) {
+      console.error("Auth check failed", err);
       set({
-        error: null,
-        isCheckingAuth: false,
+        user: null,
         isAuthenticated: false,
+        isCheckingAuth: false,
+        error: "Session expired or invalid",
       });
     }
   },
-
-
 
   forgotPassword: async (email) => {
     set({ error: null, isLoading: true });
