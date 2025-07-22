@@ -27,4 +27,15 @@ const order_api = axios.create({
   withCredentials: true,
 });
 
+// src/api/api.ts  (add to each axios instance)
+[auth_api, product_api, order_api].forEach((api) => {
+  api.interceptors.request.use((config) => {
+    const token = localStorage.getItem("authToken");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  });
+});
+
 export { auth_api, product_api, order_api};
