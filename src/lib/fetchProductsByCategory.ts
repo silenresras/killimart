@@ -1,11 +1,13 @@
 import { product_api } from "@/api/api";
 import { Product } from "@/types/product";
 
-export const fetchProductsByCategory = async (categoryName: string): Promise<Product[]> => {
+export const fetchProductsByCategory = async (
+  categorySlug: string
+): Promise<Product[]> => {
   try {
-    // fetchProductsByCategory.ts
-    const res = await product_api.get(`/categories/products-by-category?category=${categoryName}`);
-
+    const res = await product_api.get(
+      `/categories/products-by-category?slug=${encodeURIComponent(categorySlug)}`
+    );
     return res.data;
   } catch (error) {
     console.error("Error fetching products:", error);

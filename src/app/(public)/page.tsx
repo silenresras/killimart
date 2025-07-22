@@ -26,7 +26,7 @@ export default function Home() {
         </div>
       </section>
 
-      <ProductSection title="Computer Desktops" category="Computer Desktops" href="/category/computer-desktops" />
+      {/*<ProductSection title="Computer Desktops" category="Computer Desktops" href="/category/computer-desktops" />*/}
 
       <section>
         <SectionTitle title="Kllimart Online Sellers" />

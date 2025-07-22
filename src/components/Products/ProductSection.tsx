@@ -16,7 +16,7 @@ export default function ProductSection({ title, category, href }: Props) {
   const [products, setProducts] = useState<Product[]>([]);
 
   useEffect(() => {
-    fetchProductsByCategory(category).then(setProducts);
+    fetchProductsByCategory(category.toLowerCase()).then(setProducts);
   }, [category]);
 
   if (products.length === 0) return null;
