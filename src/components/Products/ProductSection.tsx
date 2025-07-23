@@ -22,18 +22,20 @@ export default function ProductSection({ title, category, href }: Props) {
   if (products.length === 0) return null;
 
   return (
-    <section>
+    <section className="px-4 sm:px-6 lg:px-8">
       <div className="flex items-center justify-between mb-4">
         <SectionTitle title={title} />
-        <a href={href} className="text-blue-600 hover:underline text-sm">
+        <a href={href} className="text-emerald-500 hover:underline text-sm whitespace-nowrap mb-5">
           View all
         </a>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
         {products.slice(0, 3).map((product) => (
           <ProductCard key={product._id} product={product} />
         ))}
       </div>
     </section>
+
   );
 }

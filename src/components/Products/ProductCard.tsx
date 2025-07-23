@@ -10,22 +10,22 @@ interface ProductCardProps {
 
 export default function ProductCard({ product }: ProductCardProps) {
   return (
-    <Link href={`/products/${product.slug}`}>
-      <div className="bg-white shadow-sm rounded-md w-[180px] hover:shadow-md transition duration-300 cursor-pointer hover:scale-105">
-        <div className="relative w-full h-[180px] bg-white flex items-center justify-center">
+    <Link href={`/products/${product.slug}`} className="block h-full">
+      <div className="bg-white shadow-sm rounded-md hover:shadow-md transition duration-300 cursor-pointer hover:scale-105 flex flex-col h-full w-full">
+        <div className="relative w-full h-48 bg-white flex items-center justify-center">
           <Image
             src={product.images[0]}
             alt={product.name}
             fill
             className="object-contain p-2"
-            sizes="(max-width: 768px) 100vw, 180px"
+            sizes="(max-width: 768px) 100vw, 25vw"
           />
         </div>
-        <div className="px-3 py-2">
-          <h3 className="text-sm font-medium leading-tight line-clamp-2 h-[3em]">
+        <div className="px-3 py-2 flex flex-col flex-grow">
+          <h3 className="text-sm font-medium leading-tight line-clamp-2 min-h-[3em]">
             {product.name}
           </h3>
-          <div className="mt-1 text-sm font-bold text-emerald-600">
+          <div className="mt-auto text-sm font-bold text-emerald-600">
             KES {product.price.toLocaleString()}
           </div>
         </div>

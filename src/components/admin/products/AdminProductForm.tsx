@@ -103,7 +103,7 @@ export default function AdminProductForm({ isEdit = false, productId }: AdminPro
       }));
     }
   };
-  
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -269,6 +269,8 @@ export default function AdminProductForm({ isEdit = false, productId }: AdminPro
                   />
                 ) : (
                   <Image
+                    width={200}
+                    height={200}
                     src={URL.createObjectURL(img)}
                     alt={`Product preview ${i + 1}`}
                     className="w-full h-24 object-cover rounded cursor-pointer"

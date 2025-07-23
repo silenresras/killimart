@@ -18,14 +18,14 @@ export default function HotDealsSection() {
   if (products.length === 0) return null;
 
   return (
-    <section>
+    <section className="px-4 sm:px-6 lg:px-8">
       <div className="flex items-center justify-between mb-4">
         <SectionTitle title="🔥 Hot Deals" />
-        <Link href="/category/hot-deals" className="text-blue-600 hover:underline text-sm">
+        <Link href="/category/hot-deals" className="text-emerald-500 hover:underline text-sm mb-5">
           View more
         </Link>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
         {products.slice(0, 6).map((product) => (
           <ProductCard key={product._id} product={product} />
         ))}

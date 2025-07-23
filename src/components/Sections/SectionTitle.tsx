@@ -4,7 +4,7 @@ interface Props {
   
   export default function SectionTitle({ title }: Props) {
     return (
-      <h2 className="text-2xl font-semibold mb-6">
+      <h2 className="text-2xl font-semibold mb-6 sm:text-xl md:text-xl">
         {title}
       </h2>
     );

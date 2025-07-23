@@ -26,7 +26,9 @@ export default function Home() {
         </div>
       </section>
 
-      {/*<ProductSection title="Computer Desktops" category="Computer Desktops" href="/category/computer-desktops" />*/}
+      <ProductSection title="Computer Desktops" category="desktops" href="/category/desktops" />
+
+      <ProductSection title="Accessories" category="accessories" href="/category/accessories" />
 
       <section>
         <SectionTitle title="Kllimart Online Sellers" />
@@ -37,6 +39,9 @@ export default function Home() {
           <CategoryCard name="Fast Delivery 3-5 days" />
         </div>
       </section>
+
+      <ProductSection title="Networking" category="networking" href="/category/networking" />
+      
     </main>
   );
 }
