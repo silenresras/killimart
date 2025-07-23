@@ -3,7 +3,6 @@ import { fetchHotDeals } from "@/lib/fetchHotDeals";
 import ProductCard from "@/components/Products/ProductCard";
 import SectionTitle from "@/components/Sections/SectionTitle";
 
-// Option 1 – keep your own interface but await params
 interface CategoryPageProps {
   params: Promise<{ slug: string }>;
 }

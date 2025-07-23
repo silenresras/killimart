@@ -37,18 +37,15 @@ function getErrorMessage(error: unknown): string {
 export default function AdminOrderList() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
+  const [updating, setUpdating] = useState<string | null>(null);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        console.log("🔄 Fetching orders via order_api...");
         const response = await order_api.get("/admin/orders");
-        console.log("✅ Orders fetched:", response.data);
-
         setOrders(response.data.orders || response.data);
       } catch (error) {
-        console.error("❌ Error fetching orders:", getErrorMessage(error));
         toast.error(getErrorMessage(error));
       } finally {
         setLoading(false);
@@ -71,7 +68,15 @@ export default function AdminOrderList() {
     if (newPaymentStatus) body.paymentStatus = newPaymentStatus;
     if (newDeliveryStatus) body.deliveryStatus = newDeliveryStatus;
 
+    const confirmMessage = `Are you sure you want to update ${
+      newPaymentStatus ? `payment to "${newPaymentStatus}"` : `delivery to "${newDeliveryStatus}"`
+    } for order ${orderId.slice(-6)}?`;
+
+    const confirm = window.confirm(confirmMessage);
+    if (!confirm) return;
+
     try {
+      setUpdating(orderId);
       await order_api.patch(`/admin/orders/${orderId}/status`, body);
       toast.success("Order status updated");
 
@@ -81,21 +86,22 @@ export default function AdminOrderList() {
         )
       );
     } catch (error) {
-      console.error("❌ Error updating order status:", getErrorMessage(error));
       toast.error(getErrorMessage(error));
+    } finally {
+      setUpdating(null);
     }
   };
-
 
   if (loading) return <div>Loading orders...</div>;
 
   return (
-    <div className="p-4">
+    <div className="p-4 overflow-x-auto">
       <h1 className="text-xl font-bold mb-4">Admin Orders</h1>
+
       {orders.length === 0 ? (
         <p>No orders found.</p>
       ) : (
-        <table className="w-full table-auto border-collapse">
+        <table className="w-full text-sm border border-gray-200 min-w-[600px]">
           <thead className="bg-gray-100">
             <tr>
               <th className="p-2">Order ID</th>
@@ -109,26 +115,44 @@ export default function AdminOrderList() {
           </thead>
           <tbody>
             {orders.map((order) => (
-              <tr key={order._id} className="border-b text-center">
+              <tr
+                key={order._id}
+                className="border-b text-center hover:bg-gray-50"
+              >
                 <td className="p-2">{order._id.slice(-6)}</td>
                 <td className="p-2">{order.user?.name}</td>
                 <td className="p-2">{new Date(order.createdAt).toLocaleDateString()}</td>
                 <td className="p-2">KES {order.totalAmount.toLocaleString()}</td>
                 <td className="p-2">{order.paymentStatus}</td>
                 <td className="p-2">{order.deliveryStatus || "pending"}</td>
-                <td className="p-2 space-y-2">
-                  <button
-                    className="bg-green-600 text-white px-2 py-1 text-sm rounded mr-2"
-                    onClick={() => updateStatus(order._id, "paid")}
-                  >
-                    Mark Paid
-                  </button>
-                  <button
-                    className="bg-blue-600 text-white px-2 py-1 text-sm rounded"
-                    onClick={() => updateStatus(order._id, undefined, "delivered")}
-                  >
-                    Mark Delivered
-                  </button>
+                <td className="p-2 flex flex-col space-y-1 md:flex-row md:space-x-2 md:space-y-0 justify-center">
+                  {order.paymentStatus === "paid" ? (
+                    <span className="bg-green-200 text-green-700 px-3 py-1 text-xs rounded">
+                      Paid
+                    </span>
+                  ) : (
+                    <button
+                      className="bg-green-600 text-white px-3 py-1 text-xs rounded disabled:opacity-50"
+                      disabled={updating === order._id}
+                      onClick={() => updateStatus(order._id, "paid")}
+                    >
+                      {updating === order._id ? "Updating..." : "Mark Paid"}
+                    </button>
+                  )}
+
+                  {order.deliveryStatus === "delivered" ? (
+                    <span className="bg-blue-200 text-blue-700 px-3 py-1 text-xs rounded">
+                      Delivered
+                    </span>
+                  ) : (
+                    <button
+                      className="bg-blue-600 text-white px-3 py-1 text-xs rounded disabled:opacity-50"
+                      disabled={updating === order._id}
+                      onClick={() => updateStatus(order._id, undefined, "delivered")}
+                    >
+                      {updating === order._id ? "Updating..." : "Mark Delivered"}
+                    </button>
+                  )}
                 </td>
               </tr>
             ))}

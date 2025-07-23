@@ -35,7 +35,6 @@ function getErrorMessage(error: unknown): string {
   return "An unknown error occurred";
 }
 
-
 export default function AdminProductList() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
@@ -48,10 +47,9 @@ export default function AdminProductList() {
           withCredentials: true,
         });
         setProducts(res.data);
-     } catch (err: unknown) {
+      } catch (err: unknown) {
         setError(getErrorMessage(err));
         console.error(err);
-      
       } finally {
         setLoading(false);
       }
@@ -67,19 +65,18 @@ export default function AdminProductList() {
       await product_api.delete(`/products/${id}`, { withCredentials: true });
       setProducts((prev) => prev.filter((p) => p._id !== id));
       toast.success('Product deleted');
-   } catch (err: unknown) {
+    } catch (err: unknown) {
       toast.error(getErrorMessage(err));
       console.error(err);
     }
-    
   };
 
   if (loading) return <p className="text-center py-10">Loading products...</p>;
   if (error) return <p className="text-red-500 text-center py-10">{error}</p>;
 
   return (
-    <div className="p-6 overflow-x-auto">
-      <div className="flex justify-between items-center mb-6">
+    <div className="p-6">
+      <div className="flex justify-between items-center mb-6 flex-wrap gap-4">
         <h1 className="text-2xl font-bold">Admin Products</h1>
         <Link
           href="/admin/products/create"
@@ -92,57 +89,115 @@ export default function AdminProductList() {
       {products.length === 0 ? (
         <p className="text-gray-500 text-center">No products found.</p>
       ) : (
-        <table className="min-w-full border border-gray-200 text-sm">
-          <thead className="bg-gray-100 text-left">
-            <tr>
-              <th className="p-3">Image</th>
-              <th className="p-3">Name</th>
-              <th className="p-3">Price (KES)</th>
-              <th className="p-3">Stock</th>
-              <th className="p-3">Hot Deal</th>
-              <th className="p-3">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
+        <>
+          {/* Desktop Table */}
+          <div className="hidden md:block overflow-x-auto">
+            <table className="min-w-full border border-gray-200 text-sm">
+              <thead className="bg-gray-100 text-left">
+                <tr>
+                  <th className="p-3">Image</th>
+                  <th className="p-3">Name</th>
+                  <th className="p-3">Price (KES)</th>
+                  <th className="p-3">Stock</th>
+                  <th className="p-3">Hot Deal</th>
+                  <th className="p-3">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {products.map((product) => (
+                  <tr key={product._id} className="border-t hover:bg-gray-50">
+                    <td className="p-3">
+                      <Image
+                        src={product.images[0]}
+                        alt={product.name}
+                        width={50}
+                        height={50}
+                        className="rounded object-cover"
+                      />
+                    </td>
+                    <td className="p-3">{product.name}</td>
+                    <td className="p-3">{product.price.toLocaleString()}</td>
+                    <td className="p-3">{product.stock}</td>
+                    <td className="p-3">
+                      {product.isHotDeal ? (
+                        <span className="text-red-500 font-semibold">Yes</span>
+                      ) : (
+                        'No'
+                      )}
+                    </td>
+                    <td className="p-3 space-x-2">
+                      <Link
+                        href={`/admin/products/${product._id}/edit`}
+                        className="text-blue-600 hover:underline"
+                      >
+                        Edit
+                      </Link>
+                      <button
+                        onClick={() => handleDelete(product._id)}
+                        className="text-red-500 hover:underline"
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Mobile Card Layout */}
+          <div className="md:hidden space-y-4">
             {products.map((product) => (
-              <tr key={product._id} className="border-t hover:bg-gray-50">
-                <td className="p-3">
+              <div
+                key={product._id}
+                className="border rounded-lg shadow-sm p-4 bg-white flex flex-col gap-2"
+              >
+                <div className="flex items-center gap-4">
                   <Image
                     src={product.images[0]}
                     alt={product.name}
-                    width={50}
-                    height={50}
+                    width={60}
+                    height={60}
                     className="rounded object-cover"
                   />
-                </td>
-                <td className="p-3">{product.name}</td>
-                <td className="p-3">{product.price.toLocaleString()}</td>
-                <td className="p-3">{product.stock}</td>
-                <td className="p-3">
-                  {product.isHotDeal ? (
-                    <span className="text-red-500 font-semibold">Yes</span>
-                  ) : (
-                    'No'
-                  )}
-                </td>
-                <td className="p-3 space-x-2">
+                  <div className="flex flex-col">
+                    <h2 className="font-semibold text-lg">{product.name}</h2>
+                    <p className="text-sm text-gray-600">
+                      {product.price.toLocaleString()} KES
+                    </p>
+                  </div>
+                </div>
+
+                <div className="text-sm text-gray-700">
+                  <p>Stock: {product.stock}</p>
+                  <p>
+                    Hot Deal:{' '}
+                    {product.isHotDeal ? (
+                      <span className="text-red-500 font-semibold">Yes</span>
+                    ) : (
+                      'No'
+                    )}
+                  </p>
+                </div>
+
+                <div className="flex justify-end gap-4 text-sm mt-2">
                   <Link
                     href={`/admin/products/${product._id}/edit`}
-                    className="text-blue-600 hover:underline"
+                    className="text-blue-600 font-medium hover:underline"
                   >
                     Edit
                   </Link>
                   <button
                     onClick={() => handleDelete(product._id)}
-                    className="text-red-500 hover:underline"
+                    className="text-red-500 font-medium hover:underline"
                   >
                     Delete
                   </button>
-                </td>
-              </tr>
+                </div>
+              </div>
             ))}
-          </tbody>
-        </table>
+          </div>
+        </>
       )}
     </div>
   );

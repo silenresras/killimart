@@ -22,8 +22,6 @@ interface Product {
   price: string;
   discount: string;
   description: string;
-  sizes: string;
-  colors: string;
   stock: string;
   category: string;
   images: (File | string)[];
@@ -37,12 +35,10 @@ export default function AdminProductForm({ isEdit = false, productId }: AdminPro
 
   const [formData, setFormData] = useState<Product>({
     name: "",
-    brand: "Generic",
+    brand: "",
     price: "",
     discount: "",
     description: "",
-    sizes: "",
-    colors: "",
     stock: "",
     category: "",
     images: [],
@@ -75,12 +71,10 @@ export default function AdminProductForm({ isEdit = false, productId }: AdminPro
 
           setFormData({
             name: product.name,
-            brand: product.brand || "Generic",
+            brand: product.brand,
             price: product.price.toString(),
             discount: product.discount?.toString() || "",
             description: product.description,
-            sizes: (product.sizes || []).join(", "),
-            colors: (product.colors || []).join(", "),
             stock: product.stock.toString(),
             category: product.category?._id || "",
             images: product.images || [],
@@ -131,8 +125,6 @@ export default function AdminProductForm({ isEdit = false, productId }: AdminPro
         price: Number(formData.price),
         discount: Number(formData.discount),
         description: formData.description,
-        sizes: formData.sizes.split(",").map((s) => s.trim()),
-        colors: formData.colors.split(",").map((c) => c.trim()),
         stock: Number(formData.stock),
         category: formData.category,
         images: imageUrls,
@@ -176,7 +168,7 @@ export default function AdminProductForm({ isEdit = false, productId }: AdminPro
             type="text"
             value={formData.brand}
             onChange={(e) => setFormData({ ...formData, brand: e.target.value })}
-            placeholder="Brand"
+            placeholder="Enter Product Brand"
             className="border rounded px-3 py-2"
           />
           <input
@@ -191,28 +183,14 @@ export default function AdminProductForm({ isEdit = false, productId }: AdminPro
             type="number"
             value={formData.discount}
             onChange={(e) => setFormData({ ...formData, discount: e.target.value })}
-            placeholder="Discount"
-            className="border rounded px-3 py-2"
-          />
-          <input
-            type="text"
-            value={formData.sizes}
-            onChange={(e) => setFormData({ ...formData, sizes: e.target.value })}
-            placeholder="Sizes (comma separated)"
-            className="border rounded px-3 py-2"
-          />
-          <input
-            type="text"
-            value={formData.colors}
-            onChange={(e) => setFormData({ ...formData, colors: e.target.value })}
-            placeholder="Colors (comma separated)"
+            placeholder="Enter Discount (E.g. 5%, 10%, 20%)"
             className="border rounded px-3 py-2"
           />
           <input
             type="number"
             value={formData.stock}
             onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
-            placeholder="Stock"
+            placeholder="Items in Stock"
             className="border rounded px-3 py-2"
             required
           />
