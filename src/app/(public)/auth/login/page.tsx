@@ -61,7 +61,7 @@ const LoginPage = () => {
           <h2 className="text-xl font-bold">LOG IN</h2>
           <p className="text-sm text-gray-600">
             Don&apos;t have an account?{" "}
-            <Link href="/auth/signup" className="text-clubRed hover:underline">
+            <Link href="/auth/signup" className="text-emerald-500 hover:underline font-semibold">
               Create one now
             </Link>
           </p>
@@ -102,6 +102,7 @@ const LoginPage = () => {
           >
             {isLoading ? "Logging in..." : "Log In"}
           </button>
+
 
           <Link
             href="/auth/reset-password"
