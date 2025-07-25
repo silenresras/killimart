@@ -28,6 +28,10 @@ export default function AdminRoute({ children }: { children: React.ReactNode }) 
   if (isCheckingAuth || !user) {
     return <div className="text-center mt-10">Checking admin access...</div>;
   }
+  
+    if (!isAuthenticated) {
+      return null; // redirect will happen via useEffect
+    }
 
   return <>{user.role === "admin" ? children : null}</>;
 }

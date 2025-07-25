@@ -2,20 +2,21 @@
 "use client";
 
 import React from "react";
-import { useRouter } from "next/navigation";
 
 interface Props {
   totalAmount: number;
   isOpen: boolean;
   onClose?: () => void;
+  onConfirmPayment: () => void; // 👈 new
 }
+
 
 const PaymentInstructionsModal: React.FC<Props> = ({
   totalAmount,
   isOpen,
   onClose,
+  onConfirmPayment
 }) => {
-  const router = useRouter();
   const tillNumber = "123456";
 
   const copyToClipboard = () => {
@@ -23,14 +24,14 @@ const PaymentInstructionsModal: React.FC<Props> = ({
   };
 
   const handleConfirm = () => {
-    onClose?.();
-    router.push("/myaccount/orders");
+    onConfirmPayment(); // 👈 now triggers order placement
   };
+
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 bg-opacity-40">
       <div className="bg-white w-full max-w-md rounded-lg shadow-lg p-6 space-y-4 text-sm">
         <h2 className="text-lg font-bold text-center">Order Placed!</h2>
 
@@ -76,6 +77,7 @@ const PaymentInstructionsModal: React.FC<Props> = ({
           >
             I’ve Paid – View Orders
           </button>
+
         </div>
       </div>
     </div>

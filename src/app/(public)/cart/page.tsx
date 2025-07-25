@@ -23,7 +23,14 @@ export default function CartPage() {
   );
 
   if (cart.length === 0) {
-    return <div className="p-6 text-center text-gray-600">Your cart is empty.</div>;
+    return <>
+      <div className="p-6 text-center text-gray-600">Your cart is empty.</div>
+      <div className="flex items-center justify-center">
+        <Link href="/">
+          <button className="text-white rounded-xl mx-4 my-4 text-center px-4 py-2 font-semibold bg-emerald-500 hover:bg-emerald-400">Continue Shopping</button>
+        </Link>
+      </div>
+    </>;
   }
 
   return (
@@ -39,9 +46,9 @@ export default function CartPage() {
       </div>
       <div className="mt-4 flex justify-end gap-2">
         <Link href="/checkout">
-        <button className="px-6 py-2 bg-emerald-500 hover:bg-emerald-400 text-white rounded">
-          Checkout
-        </button>
+          <button className="px-6 py-2 bg-emerald-500 hover:bg-emerald-400 text-white rounded">
+            Checkout
+          </button>
         </Link>
         <button
           onClick={() => setShowConfirm(true)}

@@ -14,6 +14,7 @@ export default function Home() {
       <HotDealsSection />
 
       <ProductSection title="Laptops" category="Laptops" href="/category/laptops" />
+      <ProductSection title="Phones" category="hones" href="/category/phones" />
 
 
       <section>
@@ -41,6 +42,7 @@ export default function Home() {
       </section>
 
       <ProductSection title="Networking" category="networking" href="/category/networking" />
+      
       
     </main>
   );

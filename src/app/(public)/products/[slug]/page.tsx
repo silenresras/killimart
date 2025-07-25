@@ -8,6 +8,7 @@ import Image from 'next/image';
 import toast, { Toaster } from 'react-hot-toast';
 import { FaChevronLeft, FaChevronRight, FaShareAlt, FaHeart } from 'react-icons/fa';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 import type { Product } from '@/types/product';
 
@@ -17,7 +18,20 @@ export default function ProductDetailPage() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
 
-  const { addToCart } = useCartContext();
+  const { addToCart, setBuyNowItem } = useCartContext();
+
+  const router = useRouter()
+
+  const handleBuyNow = () => {
+    if (!product) return;
+  
+    setBuyNowItem({
+      product,
+      quantity,
+    });
+  
+    router.push("/checkout");
+  };
 
   const handleAddToCart = () => {
     if (!product) return;
@@ -144,7 +158,7 @@ export default function ProductDetailPage() {
           ) : (
             <>
               <Link href="/checkout">
-                <button className="bg-emerald-500 text-white px-6 py-2 rounded hover:bg-emerald-400">
+                <button className="bg-emerald-500 text-white px-6 py-2 rounded hover:bg-emerald-400" onClick={handleBuyNow}>
                   Buy Now
                 </button>
               </Link>

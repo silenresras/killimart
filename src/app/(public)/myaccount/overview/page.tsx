@@ -3,9 +3,11 @@
 import { useEffect, useState } from "react";
 import { MdEdit, MdDelete } from "react-icons/md";
 import { toast } from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 import ShippingForm from "@/components/forms/ShippingForm";
 import { useShippingStore } from "@/store/useShippingStore";
+import { useAuthStore } from "@/store/AuthStore";
 
 interface Address {
   _id?: string;
@@ -18,6 +20,19 @@ interface Address {
 }
 
 export default function OverviewPage() {
+  const router = useRouter();
+  const {isAuthenticated, isCheckingAuth, checkAuth} = useAuthStore();
+
+  useEffect( () => {
+    checkAuth();
+  }, [checkAuth]);
+
+  useEffect( () => {
+    if (!isCheckingAuth && !isAuthenticated) {
+      router.push("/auth/login")
+    }
+  }, [isCheckingAuth,isAuthenticated, router])
+
   const {
     addresses,
     loading,
@@ -114,6 +129,19 @@ export default function OverviewPage() {
       toast.error("Failed to set default");
     }
   };
+
+    
+    if (isCheckingAuth) {
+      return (
+        <div className="p-4 text-center">
+          <p className="text-gray-500">Checking authentication...</p>
+        </div>
+      );
+    }
+  
+    if (!isAuthenticated) {
+      return null; 
+    }
 
   return (
     <div className="p-4">
