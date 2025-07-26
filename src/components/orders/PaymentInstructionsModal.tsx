@@ -17,14 +17,14 @@ const PaymentInstructionsModal: React.FC<Props> = ({
   onClose,
   onConfirmPayment
 }) => {
-  const tillNumber = "123456";
+  const tillNumber = "3121956";
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(tillNumber);
   };
 
   const handleConfirm = () => {
-    onConfirmPayment(); // 👈 now triggers order placement
+    onConfirmPayment(); // 
   };
 
 
@@ -57,6 +57,7 @@ const PaymentInstructionsModal: React.FC<Props> = ({
             Enter Amount: <strong>KES {totalAmount}</strong>
           </li>
           <li>Enter PIN and confirm</li>
+          <li>Confirm <strong>Nicholas Wachira</strong></li>
         </ol>
 
         <p className="text-xs text-gray-500">
