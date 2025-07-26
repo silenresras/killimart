@@ -1,120 +1,127 @@
 'use client';
+
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { order_api } from '@/api/api';
-import { AxiosError } from 'axios';
+import toast from 'react-hot-toast';
+import Link from 'next/link';
+import Image from 'next/image';
+
+// Define TypeScript interfaces
+interface Product {
+  slug: string;
+  name: string;
+  images: string[];
+}
+
+interface OrderItem {
+  _id: string;
+  quantity: number;
+  price: number;
+  product: Product;
+}
+
+interface ShippingAddress {
+  town: string;
+  subCounty: string;
+  county: string;
+  phoneNumber: string;
+}
+
+interface User {
+  name: string;
+  email: string;
+}
 
 interface Order {
   _id: string;
-  user: string;
+  user: User;
+  shippingAddress: ShippingAddress;
+  items: OrderItem[];
   totalAmount: number;
-  paymentStatus: 'pending' | 'paid' | 'refunded';
-  deliveryStatus: 'pending' | 'shipped' | 'delivered';
+  paymentStatus: string;
+  deliveryStatus: string;
+  createdAt: string;
 }
 
 export default function AdminOrderDetails() {
-  const params = useParams();
-  const orderId = params?.id as string;
-
+  const { id } = useParams() as { id: string };
   const [order, setOrder] = useState<Order | null>(null);
-  const [paymentStatus, setPaymentStatus] = useState('');
-  const [deliveryStatus, setDeliveryStatus] = useState('');
 
   useEffect(() => {
     const fetchOrder = async () => {
       try {
-        const res = await order_api.get(`/${orderId}`);
-        const data = res.data;
-
-        setOrder(data);
-        setPaymentStatus(data.paymentStatus);
-        setDeliveryStatus(data.deliveryStatus);
-      } catch (error: unknown) {
-        const err = error as AxiosError<{ message: string }>;
-        const message =
-          err.response?.data?.message || err.message || "Something went wrong";
-        alert(`Error: ${message}`);
+        const response = await order_api.get(`/admin/orders/${id}`);
+        setOrder(response.data);
+      } catch {
+        toast.error('Failed to fetch order details.');
       }
     };
 
-    if (orderId) {
-      fetchOrder();
-    }
-  }, [orderId]);
+    fetchOrder();
+  }, [id]);
 
-  const updateField = async (field: string, value: string) => {
-    const body = { [field]: value };
-
-    try {
-      await order_api.patch(`/admin/orders/${orderId}/status`, body);
-      alert(`${field} updated!`);
-    } catch (error: unknown) {
-      const err = error as AxiosError<{ message: string }>;
-      const message =
-        err.response?.data?.message || err.message || "Something went wrong";
-      alert(`Error: ${message}`);
-    }
-  };
-
-  { if (!order) return <div>Loading...</div>; }
+  if (!order) return <div className="p-4">Loading order details...</div>;
 
   return (
-    <div className="p-4 max-w-xl mx-auto bg-white shadow rounded-md">
-      <h1 className="text-2xl font-bold mb-4">Order #{order._id}</h1>
+    <div className="p-4">
+      <h2 className="text-2xl font-bold mb-4">Order #{order._id.slice(-6)}</h2>
 
-      <div className="space-y-2 text-sm">
-        <p><strong>User:</strong> {order.user}</p>
-        <p><strong>Amount:</strong> Ksh {order.totalAmount}</p>
-        <p><strong>Payment Status:</strong> {order.paymentStatus}</p>
-        <p><strong>Delivery Status:</strong> {order.deliveryStatus}</p>
+      <div className="mb-4">
+        <h3 className="font-semibold">Customer Info</h3>
+        <p>Name: {order.user.name}</p>
+        <p>Email: {order.user.email}</p>
       </div>
 
-      <div className="mt-6 space-y-4">
-        {/* Payment Status */}
-        <div>
-          <label className="block mb-1 font-medium">Update Payment Status</label>
-          <div className="flex flex-col sm:flex-row gap-2">
-            <select
-              value={paymentStatus}
-              onChange={(e) => setPaymentStatus(e.target.value)}
-              className="border p-2 rounded w-full sm:w-auto"
-            >
-              <option value="pending">Pending</option>
-              <option value="paid">Paid</option>
-              <option value="refunded">Refunded</option>
-            </select>
-            <button
-              onClick={() => updateField('paymentStatus', paymentStatus)}
-              className="px-4 py-2 bg-green-600 text-white rounded"
-            >
-              Update Payment
-            </button>
-          </div>
-        </div>
+      <div className="mb-4">
+        <h3 className="font-semibold">Shipping Address</h3>
+        <p>
+          {order.shippingAddress.town}, {order.shippingAddress.subCounty},{' '}
+          {order.shippingAddress.county}
+        </p>
+        <p>Phone: {order.shippingAddress.phoneNumber}</p>
+      </div>
 
-        {/* Delivery Status */}
-        <div>
-          <label className="block mb-1 font-medium">Update Delivery Status</label>
-          <div className="flex flex-col sm:flex-row gap-2">
-            <select
-              value={deliveryStatus}
-              onChange={(e) => setDeliveryStatus(e.target.value)}
-              className="border p-2 rounded w-full sm:w-auto"
-            >
-              <option value="pending">Pending</option>
-              <option value="shipped">Shipped</option>
-              <option value="delivered">Delivered</option>
-            </select>
-            <button
-              onClick={() => updateField('deliveryStatus', deliveryStatus)}
-              className="px-4 py-2 bg-blue-600 text-white rounded"
-            >
-              Update Delivery
-            </button>
-          </div>
+      <div className="mb-4">
+        <h3 className="font-semibold">Order Items</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {order.items.map((item) => (
+            <Link key={item._id} href={`/products/${item.product.slug}`}>
+              <div className="flex items-center gap-4 border p-2 rounded cursor-pointer">
+                <Image
+                  src={item.product.images[0]}
+                  alt={item.product.name}
+                  width={64}
+                  height={64}
+                  className="rounded object-cover"
+                />
+                <div>
+                  <p className="font-semibold">{item.product.name}</p>
+                  <p>Qty: {item.quantity}</p>
+                  <p>Price: KES {item.price.toLocaleString()}</p>
+                </div>
+              </div>
+            </Link>
+          ))}
         </div>
+      </div>
+
+      <div className="mt-4">
+        <p>
+          <strong>Total:</strong> KES {order.totalAmount.toLocaleString()}
+        </p>
+        <p>
+          <strong>Payment Status:</strong> {order.paymentStatus}
+        </p>
+        <p>
+          <strong>Delivery Status:</strong>{' '}
+          {order.deliveryStatus || 'pending'}
+        </p>
+        <p>
+          <strong>Ordered on:</strong>{' '}
+          {new Date(order.createdAt).toLocaleString()}
+        </p>
       </div>
     </div>
-
   );
 }

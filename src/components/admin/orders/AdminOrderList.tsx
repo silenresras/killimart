@@ -7,12 +7,29 @@ import toast from "react-hot-toast";
 
 interface Order {
   _id: string;
-  user: { name: string };
+  user: { name: string; email: string };
   createdAt: string;
   totalAmount: number;
   paymentStatus: string;
   deliveryStatus: string;
+  shippingAddress: {
+    county: string;
+    subCounty: string;
+    town: string;
+    phoneNumber: string;
+    shippingFee: number;
+  };
+  items: {
+    product: {
+      _id: string;
+      name: string;
+      images: string[];
+    };
+    quantity: number;
+    price: number;
+  }[];
 }
+
 
 function getErrorMessage(error: unknown): string {
   if (
@@ -68,9 +85,8 @@ export default function AdminOrderList() {
     if (newPaymentStatus) body.paymentStatus = newPaymentStatus;
     if (newDeliveryStatus) body.deliveryStatus = newDeliveryStatus;
 
-    const confirmMessage = `Are you sure you want to update ${
-      newPaymentStatus ? `payment to "${newPaymentStatus}"` : `delivery to "${newDeliveryStatus}"`
-    } for order ${orderId.slice(-6)}?`;
+    const confirmMessage = `Are you sure you want to update ${newPaymentStatus ? `payment to "${newPaymentStatus}"` : `delivery to "${newDeliveryStatus}"`
+      } for order ${orderId.slice(-6)}?`;
 
     const confirm = window.confirm(confirmMessage);
     if (!confirm) return;
@@ -115,17 +131,27 @@ export default function AdminOrderList() {
           </thead>
           <tbody>
             {orders.map((order) => (
-              <tr
-                key={order._id}
-                className="border-b text-center hover:bg-gray-50"
-              >
+              <tr key={order._id} className="border-b text-center hover:bg-gray-50">
                 <td className="p-2">{order._id.slice(-6)}</td>
                 <td className="p-2">{order.user?.name}</td>
-                <td className="p-2">{new Date(order.createdAt).toLocaleDateString()}</td>
+                <td className="p-2">
+                  {new Date(order.createdAt).toLocaleString("en-KE", {
+                    dateStyle: "medium",
+                    timeStyle: "short",
+                  })}
+                </td>
                 <td className="p-2">KES {order.totalAmount.toLocaleString()}</td>
                 <td className="p-2">{order.paymentStatus}</td>
                 <td className="p-2">{order.deliveryStatus || "pending"}</td>
-                <td className="p-2 flex flex-col space-y-1 md:flex-row md:space-x-2 md:space-y-0 justify-center">
+                <td className="p-2 flex flex-col md:flex-row justify-center gap-2">
+                  <button
+                    onClick={() => window.location.href = `/admin/orders/${order._id}`}
+                    className="bg-gray-700 text-white text-xs px-3 py-1 rounded"
+                  >
+                    Details
+                  </button>
+
+                  {/* Existing Mark Paid / Delivered Buttons */}
                   {order.paymentStatus === "paid" ? (
                     <span className="bg-green-200 text-green-700 px-3 py-1 text-xs rounded">
                       Paid
@@ -155,6 +181,7 @@ export default function AdminOrderList() {
                   )}
                 </td>
               </tr>
+
             ))}
           </tbody>
         </table>
