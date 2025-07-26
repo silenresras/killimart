@@ -20,7 +20,7 @@ export default function LatestProductsSection() {
     <section className="px-4 sm:px-6 lg:px-8">
       <SectionTitle title="🆕 Latest Products" />
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-        {latestProducts.slice(0, 8).map((product) => (
+        {latestProducts.slice(0, 12).map((product) => (
           <ProductCard key={product._id} product={product} />
         ))}
       </div>

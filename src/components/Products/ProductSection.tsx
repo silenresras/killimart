@@ -31,7 +31,7 @@ export default function ProductSection({ title, category, href }: Props) {
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-        {products.slice(0, 3).map((product) => (
+        {products.slice(0, 12).map((product) => (
           <ProductCard key={product._id} product={product} />
         ))}
       </div>

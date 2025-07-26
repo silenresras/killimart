@@ -57,7 +57,8 @@ const PaymentInstructionsModal: React.FC<Props> = ({
             Enter Amount: <strong>KES {totalAmount}</strong>
           </li>
           <li>Enter PIN and confirm</li>
-          <li>Confirm <strong>Nicholas Wachira</strong></li>
+          <li>Confirm <strong>Nicholas Wachira</strong>
+          </li>
         </ol>
 
         <p className="text-xs text-gray-500">
