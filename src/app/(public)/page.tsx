@@ -7,7 +7,7 @@ import HotDealsSection from "@/components/Products/HotDealsSection";
 
 export default function Home() {
   return (
-    <main className="p-6 space-y-12 bg-gray-50">
+    <main className="mt-2 p-6 space-y-12 bg-gray-50">
       <Hero />
       <LatestProductsSection />
 

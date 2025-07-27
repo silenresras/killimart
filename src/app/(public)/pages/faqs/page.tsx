@@ -15,7 +15,17 @@ const faqData = [
   {
     question: "How do I contact support?",
     answer: "Reach out through our contact form or email us at support@killimart.com."
-  }
+  },
+  {
+  question: "Which payment methods are accepted?",
+    answer:
+      "M-Pesa? We are working to bring other methods to our store."
+  },
+  {
+  question: "Do you ship nationwide?",
+    answer:
+    "Yes we do delivery Nationwide but we have a delivery fee based on your location."
+  },
 ];
 
 export default function FAQs() {

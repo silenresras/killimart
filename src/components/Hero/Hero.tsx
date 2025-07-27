@@ -35,7 +35,39 @@ const slides = [
     image:
       "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=1500&q=80",
   },
+  {
+    title: "Smart Home Devices 🏡",
+    text: "Control your home with AI‑powered devices and smart automation.",
+    image:
+      "https://images.unsplash.com/photo-1585970480901-90d6bb2a48b5?auto=format&fit=crop&q=80&w=1200",
+  },
+  {
+    title: "Office Essentials 💼",
+    text: "Equip your workspace with modern and reliable tech tools.",
+    image:
+      "https://images.unsplash.com/photo-1561197671-9bf9339ca5ac?auto=format&fit=crop&q=80&w=1200",
+  },
+  {
+    title: "Wearable Tech ⌚",
+    text: "Track your health and stay connected on the go.",
+    image:
+      "https://images.unsplash.com/photo-1596495577886-d920f1fb7238?auto=format&fit=crop&q=80&w=1200",
+  },
+  {
+    title: "Creative Gear for Creators 🎧📷",
+    text: "Cameras, headphones, and tools for your content creation journey.",
+    image:
+      "https://images.unsplash.com/photo-1546624666-b8a2921c192f?auto=format&fit=crop&q=80&w=1200",
+  },
+  {
+    title: "Eco‑friendly Tech 🌱",
+    text: "Discover energy-efficient gadgets for a greener future.",
+    image:
+      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=1200",
+  },
+  
 ];
+
 
 export default function Hero() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -45,7 +77,7 @@ export default function Hero() {
     const interval = setInterval(() => {
       slideRef.current = (slideRef.current + 1) % slides.length;
       setCurrentSlide(slideRef.current);
-    }, 7000); // 7s delay
+    }, 2000); // 2s delay
 
     return () => clearInterval(interval);
   }, []);

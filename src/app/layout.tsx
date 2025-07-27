@@ -2,6 +2,8 @@
 import RouteLoader from "@/components/loader/RouteLoader";
 import "./globals.css";
 import { CartProvider } from "@/components/Context/CartContext";
+import ChatWhatsapp from "@/components/chatbot/ChatWhatsapp";
+
 
 export const metadata = {
   title: "Killimart",
@@ -12,9 +14,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" suppressHydrationWarning>
       <CartProvider>
-      <body className="relative">
-        <RouteLoader />
-        {children}</body>
+        <body className="relative">
+          <RouteLoader />
+          <ChatWhatsapp />
+          {children}
+        </body>
       </CartProvider>
     </html>
   );

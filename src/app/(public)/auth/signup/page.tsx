@@ -48,12 +48,11 @@ const SignupPage = () => {
       <div className="w-full max-w-md bg-white p-6 rounded-lg shadow space-y-6">
         {/* Logo */}
         <div className="flex justify-center">
-        <Image
+          <Image
             src="/images.png"
-            alt="Killimart Logo"
-            width={40}
-            height={40}
-            className="filter hue-rotate-[140deg] saturate-50"
+            alt="SmartKenya Logo"
+            width={120}
+            height={120}
           />
         </div>
 
@@ -61,7 +60,7 @@ const SignupPage = () => {
         <div className="text-center space-y-1">
           <h2 className="text-xl font-bold">CREATE AN ACCOUNT</h2>
           <p className="text-sm text-gray-600">
-            Join now for free and be part of Killimart to enjoy
+            Join now for free and be part of SmartKenya to enjoy
             exclusive content, perks & rewards
           </p>
         </div>
@@ -102,7 +101,7 @@ const SignupPage = () => {
           </div>
 
           <p className="text-xs text-gray-500">
-            By signing up, you agree to Killimart using your personal data
+            By signing up, you agree to SmartKenya using your personal data
             in accordance with our Privacy Policy.
           </p>
 

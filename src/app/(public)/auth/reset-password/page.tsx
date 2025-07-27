@@ -37,12 +37,11 @@ const ResetPasswordPage = () => {
       <div className="w-full max-w-md bg-white p-6 rounded-lg shadow space-y-6">
         {/* Logo */}
         <div className="flex justify-center">
-        <Image
+          <Image
             src="/images.png"
-            alt="Killimart Logo"
-            width={40}
-            height={40}
-            className="filter hue-rotate-[140deg] saturate-50"
+            alt="SmartKenya Logo"
+            width={140}
+            height={140}
           />
         </div>
 
