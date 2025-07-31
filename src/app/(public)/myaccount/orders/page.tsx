@@ -35,7 +35,7 @@ export default function OrdersPage() {
               key={status}
               onClick={() => setFilter(status as PaymentStatus)}
               className={`px-4 py-2 rounded-full transition-colors duration-200 min-w-[100px] text-sm font-medium ${filter === status
-                ? 'bg-emerald-500 text-white shadow-md'
+                ? 'bg-green-600 text-white shadow-md'
                 : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
                 }`}
             >
@@ -53,7 +53,7 @@ export default function OrdersPage() {
         >
           <div className="flex flex-col md:flex-row md:items-center md:justify-between">
             <h2 className="font-semibold text-lg">
-              Order No: <span className="text-emerald-500">ORDER-{String(orderIndex + 1).padStart(3, '0')}</span>
+              Order No: <span className="text-green-600">ORDER-{String(orderIndex + 1).padStart(3, '0')}</span>
             </h2>
             <div className="text-sm text-gray-600">
               {format(new Date(order.createdAt), 'MMMM do, yyyy @ hh:mm a')}
@@ -93,7 +93,7 @@ export default function OrdersPage() {
                       <div className="flex-1 space-y-1">
                         <a
                           href={`/products/${product?.slug}`}
-                          className="text-emerald-500 font-medium hover:underline"
+                          className="text-green-600 font-medium hover:underline"
                         >
                           {product?.name || 'Product'}
                         </a>

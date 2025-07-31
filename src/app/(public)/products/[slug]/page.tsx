@@ -6,7 +6,7 @@ import { useCartContext } from '@/components/Context/CartContext';
 import { fetchProductBySlug } from '@/lib/fetchProductsBySlug';
 import Image from 'next/image';
 import toast, { Toaster } from 'react-hot-toast';
-import { FaChevronLeft, FaChevronRight, FaShareAlt, FaHeart } from 'react-icons/fa';
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
@@ -75,7 +75,7 @@ export default function ProductDetailPage() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto p-4 grid md:grid-cols-2 gap-10">
+    <div className="max-w-6xl mx-auto p-4 grid md:grid-cols-2 gap-10 bg-blue-50 rounded-xl mt-2">
       <Toaster position="top-right" />
 
       {/* Left: Images */}
@@ -112,7 +112,7 @@ export default function ProductDetailPage() {
               width={100}
               height={100}
               className={`rounded cursor-pointer border-2 ${
-                i === currentImageIndex ? 'border-blue-500' : 'border-transparent'
+                i === currentImageIndex ? 'border-green-500' : 'border-transparent'
               }`}
               onClick={() => handleThumbnailClick(i)}
             />
@@ -123,7 +123,7 @@ export default function ProductDetailPage() {
       {/* Right: Details */}
       <div className="space-y-4">
         <h1 className="text-2xl font-bold">{product.name}</h1>
-        <p className="text-lg text-emerald-500 font-semibold">
+        <p className="text-lg text-green-600 font-semibold">
           KES {product.price.toLocaleString()}
         </p>
         <p className="text-gray-700">{product.description}</p>
@@ -158,24 +158,18 @@ export default function ProductDetailPage() {
           ) : (
             <>
               <Link href="/checkout">
-                <button className="bg-emerald-500 text-white px-6 py-2 rounded hover:bg-emerald-400" onClick={handleBuyNow}>
+                <button className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-500" onClick={handleBuyNow}>
                   Buy Now
                 </button>
               </Link>
               <button
                 onClick={handleAddToCart}
-                className="border border-emerald-500 text-emerald-500 px-6 py-2 rounded hover:bg-emerald-50"
+                className="border border-green-600 text-green-600 px-6 py-2 rounded hover:bg-emerald-50"
               >
                 Add to Cart
               </button>
             </>
           )}
-          <button className="p-2 text-gray-600 hover:text-blue-600">
-            <FaShareAlt />
-          </button>
-          <button className="p-2 text-gray-600 hover:text-red-500">
-            <FaHeart />
-          </button>
         </div>
       </div>
     </div>

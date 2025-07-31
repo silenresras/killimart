@@ -76,10 +76,10 @@ export default function ResetPasswordPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full border px-3 py-2 rounded text-sm focus:outline-none focus:ring focus:border-clubRed"
+              className="w-full border px-3 py-2 rounded text-sm focus:outline-none focus:border-green-600"
             />
             <span
-              className="absolute right-3 top-2 text-sm text-clubRed cursor-pointer"
+              className="absolute right-3 top-2 text-sm text-green-600 cursor-pointer"
               onClick={() => setShowPassword(!showPassword)}
             >
               {showPassword ? "Hide" : "Show"}
@@ -105,10 +105,10 @@ export default function ResetPasswordPage() {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
-              className="w-full border px-3 py-2 rounded text-sm focus:outline-none focus:ring focus:border-clubRed"
+              className="w-full border px-3 py-2 rounded text-sm focus:outline-none focus:border-green-600"
             />
             <span
-              className="absolute right-3 top-2 text-sm text-clubRed cursor-pointer"
+              className="absolute right-3 top-2 text-sm text-green-600 cursor-pointer"
               onClick={() => setShowConfirm(!showConfirm)}
             >
               {showConfirm ? "Hide" : "Show"}
@@ -122,7 +122,7 @@ export default function ResetPasswordPage() {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-emerald-500 text-white py-2 rounded font-semibold hover:bg-emerald-400 transition"
+            className="w-full bg-green-600 text-white py-2 rounded font-semibold hover:bg-green-500 transition"
           >
             {isLoading ? "Updating..." : "Update Password"}
           </button>

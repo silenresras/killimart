@@ -97,7 +97,7 @@ export default function ShippingForm({
       <div className="flex gap-4">
         <button
           type="submit"
-          className="bg-blue-600 text-white px-4 py-2 rounded disabled:opacity-50"
+          className="bg-green-600 text-white hover:bg-green-500 px-4 py-2 rounded disabled:opacity-50"
           disabled={isSaving}
         >
           {isSaving ? "Saving..." : "Save"}
@@ -105,7 +105,7 @@ export default function ShippingForm({
         {onDelete && (
           <button
             type="button"
-            className="bg-red-600 text-white px-4 py-2 rounded"
+            className="bg-red-600 hover:bg-red-500 text-white px-4 py-2 rounded"
             onClick={onDelete}
             disabled={isSaving}
           >

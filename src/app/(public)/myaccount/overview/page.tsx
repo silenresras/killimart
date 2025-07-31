@@ -21,17 +21,17 @@ interface Address {
 
 export default function OverviewPage() {
   const router = useRouter();
-  const {isAuthenticated, isCheckingAuth, checkAuth} = useAuthStore();
+  const { isAuthenticated, isCheckingAuth, checkAuth } = useAuthStore();
 
-  useEffect( () => {
+  useEffect(() => {
     checkAuth();
   }, [checkAuth]);
 
-  useEffect( () => {
+  useEffect(() => {
     if (!isCheckingAuth && !isAuthenticated) {
       router.push("/auth/login")
     }
-  }, [isCheckingAuth,isAuthenticated, router])
+  }, [isCheckingAuth, isAuthenticated, router])
 
   const {
     addresses,
@@ -130,18 +130,18 @@ export default function OverviewPage() {
     }
   };
 
-    
-    if (isCheckingAuth) {
-      return (
-        <div className="p-4 text-center">
-          <p className="text-gray-500">Checking authentication...</p>
-        </div>
-      );
-    }
-  
-    if (!isAuthenticated) {
-      return null; 
-    }
+
+  if (isCheckingAuth) {
+    return (
+      <div className="p-4 text-center">
+        <p className="text-gray-500">Checking authentication...</p>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return null;
+  }
 
   return (
     <div className="p-4">
@@ -149,7 +149,7 @@ export default function OverviewPage() {
         <h2 className="text-xl font-bold">Shipping Addresses</h2>
         <button
           onClick={() => openModal()}
-          className="bg-emerald-500 text-white px-4 py-2 rounded"
+          className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-500"
         >
           Add Address
         </button>
@@ -185,17 +185,17 @@ export default function OverviewPage() {
               {!addr.isDefault ? (
                 <button
                   onClick={() => handleSetDefault(addr._id!)}
-                  className="text-emerald-500 text-sm"
+                  className="text-green-600 text-sm"
                 >
                   Set as Default
                 </button>
               ) : (
-                <span className="text-emerald-500 text-sm">Default Address</span>
+                <span className="text-green-600 text-sm">Default Address</span>
               )}
 
               <MdEdit
                 onClick={() => openModal(addr)}
-                className="text-emerald-500 cursor-pointer text-xl"
+                className="text-green-600 cursor-pointer text-xl"
               />
               <MdDelete
                 onClick={() => handleDelete(addr._id!)}
@@ -207,8 +207,14 @@ export default function OverviewPage() {
       )}
 
       {modalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded shadow-lg w-full max-w-md">
+        <div
+          className="fixed inset-0 bg-opacity-50 z-50 flex items-center justify-center"
+          onClick={closeModal} // click anywhere to close
+        >
+          <div
+            className="bg-white p-6 rounded shadow-lg w-full max-w-md"
+            onClick={(e) => e.stopPropagation()} // prevent closing when clicking inside modal
+          >
             <ShippingForm
               address={formAddress}
               onChange={(updatedAddress) =>
@@ -233,6 +239,7 @@ export default function OverviewPage() {
           </div>
         </div>
       )}
+
     </div>
   );
 }

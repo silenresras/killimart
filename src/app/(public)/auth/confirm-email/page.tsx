@@ -99,7 +99,7 @@ const ConfirmEmailPage = () => {
 
           <button
             type="submit"
-            className="w-full bg-emerald-500 text-white py-2 rounded font-semibold hover:bg-emerald-300 transition"
+            className="w-full bg-green-600 text-white py-2 rounded font-semibold hover:bg-green-500 transition"
           >
             Confirm Code
           </button>
@@ -109,7 +109,7 @@ const ConfirmEmailPage = () => {
           Didn&apos;  t receive it?{" "}
           <button
             onClick={() => router.push("/auth/resend-verification-email")}
-            className="text-emerald-500 hover:underline"
+            className="text-green-600 hover:underline"
           >
             Resend Code
           </button>

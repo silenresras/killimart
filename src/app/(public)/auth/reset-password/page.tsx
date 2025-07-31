@@ -61,13 +61,13 @@ const ResetPasswordPage = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="w-full border-emerald-500 border px-3 py-2 rounded text-sm focus:outline-none"
+            className="w-full border-green-600 border px-3 py-2 rounded text-sm focus:outline-none"
           />
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-emerald-500 text-white py-2 rounded font-semibold hover:bg-emerald-400 transition"
+            className="w-full bg-green-600 text-white py-2 rounded font-semibold hover:bg-green-500 transition"
           >
             {loading ? "Sending..." : "Submit"}
           </button>
@@ -75,11 +75,11 @@ const ResetPasswordPage = () => {
 
         {/* Links */}
         <div className="text-center text-sm text-gray-600 mt-4">
-          <Link href="/auth/signup" className="hover:underline text-emerald-500">
+          <Link href="/auth/signup" className="hover:underline text-green-600">
             Create an account
           </Link>{" "}
           or{" "}
-          <Link href="/auth/login" className="hover:underline text-emerald-500">
+          <Link href="/auth/login" className="hover:underline text-green-600">
             Log in
           </Link>
         </div>

@@ -41,7 +41,7 @@ export default function Sidebar() {
       <aside className="bg-white rounded-2xl shadow p-4 md:p-6 mx-2 mt-4 md:mx-4 md:mt-6 w-full md:w-64 md:ml-4 sm:mr-4">
         {/* User Info */}
         <div className="flex flex-col items-center mb-4 md:mb-6">
-          <FaUserCircle className="text-4xl md:text-5xl text-emerald-500 mb-1 md:mb-2" />
+          <FaUserCircle className="text-4xl md:text-5xl text-green-600 mb-1 md:mb-2" />
           <p className="text-sm md:text-lg font-semibold text-gray-800">
             {user?.name || "Guest"}
           </p>
@@ -58,7 +58,7 @@ export default function Sidebar() {
               className={clsx(
                 "px-3 py-2 rounded-md font-medium text-sm md:text-base transition flex-shrink-0",
                 pathname === link.href
-                  ? "bg-emerald-500 text-white"
+                  ? "bg-green-600 text-white"
                   : "text-gray-700 hover:bg-blue-100"
               )}
             >
@@ -73,7 +73,7 @@ export default function Sidebar() {
           disabled={isLoggingOut || isLoading}
           className={clsx(
             "mt-6 w-full text-center px-4 py-2 rounded-md font-medium text-sm md:text-base transition",
-            "bg-emerald-500 text-white hover:bg-emerald-300 disabled:opacity-50 disabled:cursor-not-allowed"
+            "bg-green-600 text-white hover:bg-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
           )}
         >
           {isLoggingOut ? "Logging out..." : "Logout"}

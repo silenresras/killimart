@@ -27,16 +27,16 @@ export default function CartPage() {
       <div className="p-6 text-center text-gray-600">Your cart is empty.</div>
       <div className="flex items-center justify-center">
         <Link href="/">
-          <button className="text-white rounded-xl mx-4 my-4 text-center px-4 py-2 font-semibold bg-emerald-500 hover:bg-emerald-400">Continue Shopping</button>
+          <button className="text-white rounded-xl mx-4 my-4 text-center px-4 py-2 font-semibold bg-green-600 hover:bg-green-500">Continue Shopping</button>
         </Link>
       </div>
     </>;
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
+    <div className="max-w-4xl mx-auto p-6 bg-blue-50 rounded-xl mt-2">
       <h1 className="text-2xl font-bold mb-6">Your Cart</h1>
-      <div className="space-y-4">
+      <div className="space-y-4 bg-white rounded-xl">
         {cart.map((item) => (
           <CartItem key={item.product._id} item={item} />
         ))}
@@ -46,7 +46,7 @@ export default function CartPage() {
       </div>
       <div className="mt-4 flex justify-end gap-2">
         <Link href="/checkout">
-          <button className="px-6 py-2 bg-emerald-500 hover:bg-emerald-400 text-white rounded">
+          <button className="px-6 py-2 bg-green-600 hover:bg-green-500 text-white rounded">
             Checkout
           </button>
         </Link>

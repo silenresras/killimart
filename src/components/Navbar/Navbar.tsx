@@ -20,7 +20,6 @@ export default function Navbar() {
     setCartCount(cart.length);
   }, [checkAuth]);
 
-  // Handle click outside of drawer
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (drawerRef.current && !drawerRef.current.contains(event.target as Node)) {
@@ -44,29 +43,31 @@ export default function Navbar() {
   };
 
   return (
-    <header className="shadow-md sticky top-0 z-50 bg-white">
+    <header className="shadow-md sticky top-0 z-50 bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
       {/* Top Bar */}
       <div className="flex items-center justify-between px-4 sm:px-6 py-3 border-b gap-2 lg:gap-4">
         {/* Logo */}
-        <Link href='/'>
-        <div className="flex items-center gap-2">
+        <Link href="/" className="flex-shrink-0">
           <Image
-            src="/images.png"   
+            src="/images.png"
             alt="SmartKenya Logo"
-            width={120}           
-            height={120}           
+            width={100}
+            height={100}
+            className="h-10 w-auto"
           />
-        </div>
         </Link>
 
         {/* Search */}
-        <div className="flex-1 max-w-md">
+        <div className="flex-grow max-w-2xl mx-4">
           <SearchBar />
         </div>
 
-        {/* Icons for Desktop */}
-        <div className="hidden md:flex items-center gap-3 lg:gap-4 text-gray-700 text-lg">
-          <div className="relative cursor-pointer flex items-center gap-1" onClick={handleUserClick}>
+        {/* Icons */}
+        <div className="hidden md:flex items-center gap-4 text-gray-700 dark:text-white text-lg">
+          <div
+            className="relative cursor-pointer flex items-center gap-1"
+            onClick={handleUserClick}
+          >
             <FaUser />
             <span className="text-sm font-medium">
               {isAuthenticated && user ? user.name.split(" ")[0] : "Login"}
@@ -86,7 +87,7 @@ export default function Navbar() {
         {/* Hamburger Icon */}
         <button
           onClick={() => setMenuOpen(true)}
-          className="md:hidden text-2xl text-gray-700"
+          className="md:hidden text-2xl text-gray-700 dark:text-white"
         >
           <FaBars />
         </button>
@@ -95,15 +96,11 @@ export default function Navbar() {
       {/* Side Drawer for Mobile */}
       {menuOpen && (
         <div className="fixed inset-0 z-50 flex">
-          {/* Backdrop */}
           <div className="fixed inset-0 bg-black/30 backdrop-blur-sm" />
-
-          {/* Right Drawer */}
           <div
             ref={drawerRef}
-            className="relative bg-white w-72 h-full shadow-lg animate-slide-in z-50 flex flex-col"
+            className="relative bg-white dark:bg-gray-900 text-gray-900 dark:text-white w-72 h-full shadow-lg animate-slide-in z-50 flex flex-col"
           >
-            {/* Drawer Header (non-scrollable) */}
             <div className="flex justify-between items-center p-4 border-b">
               <div className="flex items-center gap-2">
                 <Link href="/">
@@ -112,7 +109,7 @@ export default function Navbar() {
                     height={40}
                     src="/images.png"
                     alt="Killimart Logo"
-                    className="w-8 h-8 filter hue-rotate-[140deg] saturate-50 transition-transform hover:scale-105"
+                    className="w-8 h-8 transition-transform hover:scale-105"
                   />
                 </Link>
                 <Link
@@ -120,22 +117,20 @@ export default function Navbar() {
                   onClick={() => setMenuOpen(false)}
                   className="text-xl font-bold text-emerald-500 hover:underline"
                 >
-                  Killimart
+                  SmartKenya
                 </Link>
               </div>
               <button
                 onClick={() => setMenuOpen(false)}
-                className="text-2xl text-gray-600 hover:text-red-500 transition-colors"
+                className="text-2xl text-gray-600 dark:text-gray-300 hover:text-red-500 transition-colors"
               >
                 <FaTimes />
               </button>
             </div>
 
-            {/* Drawer Body (scrollable) */}
             <div className="p-4 overflow-y-auto max-h-full flex-1">
-              {/* User */}
               <div
-                className="flex items-center gap-3 cursor-pointer p-2 hover:bg-gray-100 rounded-md transition"
+                className="flex items-center gap-3 cursor-pointer p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md transition"
                 onClick={handleUserClick}
               >
                 <FaUser className="text-lg" />
@@ -144,11 +139,10 @@ export default function Navbar() {
                 </span>
               </div>
 
-              {/* Cart */}
               <Link
                 href="/cart"
                 onClick={() => setMenuOpen(false)}
-                className="relative flex items-center gap-3 p-2 hover:bg-gray-100 rounded-md transition"
+                className="relative flex items-center gap-3 p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md transition"
               >
                 <FaShoppingCart className="text-lg" />
                 <span>Cart</span>
@@ -161,15 +155,18 @@ export default function Navbar() {
 
               {/* Categories */}
               <div className="mt-6">
-                <h4 className="text-sm text-gray-500 mb-2">Categories</h4>
+                <h4 className="text-sm text-gray-500 dark:text-gray-300 mb-2">Categories</h4>
                 <div className="flex flex-col gap-2">
-                  <Link href="/category/laptops" className="hover:text-emerald-500   hover:underline" onClick={() => setMenuOpen(false)}>Laptops</Link>
-                  <Link href="/category/desktops" className="hover:text-emerald-500 hover:underline" onClick={() => setMenuOpen(false)}>Computer Desktops</Link>
-                  <Link href="/category/phones" className="hover:text-emerald-500 hover:underline" onClick={() => setMenuOpen(false)}>Phones</Link>
-                  <Link href="/category/accessories" className="hover:text-emerald-500 hover:underline" onClick={() => setMenuOpen(false)}>Accessories</Link>
-                  <Link href="/category/networking" className="hover:text-emerald-500 hover:underline" onClick={() => setMenuOpen(false)}>Networking</Link>
-                  <Link href="/category/storage" className="hover:text-emerald-500 hover:underline" onClick={() => setMenuOpen(false)}>Storage Devices</Link>
-                  <Link href="/category/phones" className="hover:text-emerald-500 hover:underline" onClick={() => setMenuOpen(false)}>Phones</Link>
+                  {["laptops", "desktops", "phones", "accessories", "networking", "storage"].map((category) => (
+                    <Link
+                      key={category}
+                      href={`/category/${category}`}
+                      onClick={() => setMenuOpen(false)}
+                      className="hover:text-emerald-500 hover:underline"
+                    >
+                      {category.charAt(0).toUpperCase() + category.slice(1)}
+                    </Link>
+                  ))}
                 </div>
               </div>
             </div>
@@ -177,21 +174,20 @@ export default function Navbar() {
         </div>
       )}
 
-
-
-
       {/* Category Bar */}
-      <div className="hidden sm:flex justify-center items-center text-center overflow-x-auto">
-        <nav className="px-6 py-2 flex gap-6 text-xl md:text-lg sm:text-base whitespace-nowrap font-medium">
-          <Link href="/category/laptops" className="hover:text-emerald-500 hover:underline transition-all">Laptops</Link>
-          <Link href="/category/desktops" className="hover:text-emerald-500 hover:underline transition-all">Computer Desktops</Link>
-          <Link href="/category/phones" className="hover:text-emerald-500 hover:underline" onClick={() => setMenuOpen(false)}>Phones</Link>
-          <Link href="/category/accessories" className="hover:text-emerald-500 hover:underline transition-all">Accessories</Link>
-          <Link href="/category/networking" className="hover:text-emerald-500 hover:underline transition-all">Networking</Link>
-          <Link href="/category/storage" className="hover:text-emerald-500 hover:underline transition-all">Storage Devices</Link>
+      <div className="hidden sm:flex justify-center items-center text-center overflow-x-auto dark:bg-gray-800">
+        <nav className="px-6 py-2 flex gap-6 text-sm md:text-base font-medium text-gray-700 dark:text-gray-100">
+          {["laptops", "desktops", "phones", "accessories", "networking", "storage"].map((category) => (
+            <Link
+              key={category}
+              href={`/category/${category}`}
+              className="hover:text-emerald-500 hover:underline transition-all"
+            >
+              {category.charAt(0).toUpperCase() + category.slice(1)}
+            </Link>
+          ))}
         </nav>
       </div>
-
     </header>
   );
 }

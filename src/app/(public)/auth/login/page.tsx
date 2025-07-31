@@ -60,7 +60,7 @@ const LoginPage = () => {
           <h2 className="text-xl font-bold">LOG IN</h2>
           <p className="text-sm text-gray-600">
             Don&apos;t have an account?{" "}
-            <Link href="/auth/signup" className="text-emerald-500 hover:underline font-semibold">
+            <Link href="/auth/signup" className="text-green-600 hover:underline font-semibold">
               Create one now
             </Link>
           </p>
@@ -73,7 +73,7 @@ const LoginPage = () => {
             placeholder="Email Address"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full border px-3 py-2 rounded text-sm focus:outline-none border-emerald-500"
+            className="w-full border px-3 py-2 rounded text-sm focus:outline-none border-green-600"
             required
           />
 
@@ -83,8 +83,7 @@ const LoginPage = () => {
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full border px-3 py-2 rounded text-sm focus:outline-none border-emerald-500"
-              required
+              className="w-full border px-3 py-2 rounded text-sm focus:outline-none border-green-600"
             />
             <span
               className="absolute right-3 top-2 text-sm text-clubRed cursor-pointer"
@@ -96,7 +95,7 @@ const LoginPage = () => {
 
           <button
             type="submit"
-            className="w-full bg-clubRed text-white bg-emerald-500 py-2 rounded font-semibold hover:bg-emerald-300 transition"
+            className="w-full bg-clubRed text-white bg-green-600 py-2 rounded font-semibold hover:bg-green-500 transition"
             disabled={isLoading}
           >
             {isLoading ? "Logging in..." : "Log In"}

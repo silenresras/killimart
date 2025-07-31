@@ -72,7 +72,7 @@ const SignupPage = () => {
             onChange={(e) => setName(e.target.value)}
             type="text"
             placeholder="Full Name"
-            className="w-full border px-3 py-2 rounded text-sm focus:outline-none border-emerald-500"
+            className="w-full border px-3 py-2 rounded text-sm focus:outline-none border-green-600"
             required
           />
           <input
@@ -80,7 +80,7 @@ const SignupPage = () => {
             onChange={(e) => setEmail(e.target.value)}
             type="email"
             placeholder="Email"
-            className="w-full border px-3 py-2 rounded text-sm focus:outline-none border-emerald-500"
+            className="w-full border px-3 py-2 rounded text-sm focus:outline-none border-green-600"
             required
           />
           <div className="relative">
@@ -89,7 +89,7 @@ const SignupPage = () => {
               onChange={(e) => setPassword(e.target.value)}
               type={showPassword ? "text" : "password"}
               placeholder="Password"
-              className="w-full border px-3 py-2 rounded text-sm focus:outline-none border-emerald-500"
+              className="w-full border px-3 py-2 rounded text-sm focus:outline-none border-green-600"
               required
             />
             <span
@@ -107,7 +107,7 @@ const SignupPage = () => {
 
           <button
             type="submit"
-            className="w-full bg-emerald-600 text-white py-2 rounded font-semibold hover:bg-emerald-400 transition"
+            className="w-full bg-green-600 text-white py-2 rounded font-semibold hover:bg-green-500 transition"
           >
             {isLoading ? "Creating Account..." : "Create Account"}
           </button>
@@ -136,7 +136,7 @@ const SignupPage = () => {
         {/* Login link */}
         <p className="text-sm text-center text-gray-600">
           Already have an account?{" "}
-          <Link href="/auth/login" className="text-emerald-500 hover:underline">
+          <Link href="/auth/login" className="text-green-600 hover:underline">
             Log in
           </Link>
         </p>

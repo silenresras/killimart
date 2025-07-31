@@ -1,12 +1,12 @@
 interface Props {
-    title: string;
-  }
-  
-  export default function SectionTitle({ title }: Props) {
-    return (
-      <h2 className="text-2xl font-semibold mb-6 sm:text-xl md:text-xl">
-        {title}
-      </h2>
-    );
-  }
-  
+  title: string;
+}
+
+export default function SectionTitle({ title }: Props) {
+  return (
+    <h2 className="text-2xl font-semibold mb-6 sm:text-xl md:text-xl
+                   text-slate-900 dark:text-slate-100">
+      {title}
+    </h2>
+  );
+}

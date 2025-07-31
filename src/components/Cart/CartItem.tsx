@@ -22,8 +22,8 @@ export default function CartItem({ item }: { item: CartItemType }) {
   };
 
   return (
-    <div className="flex items-center justify-between border-b pb-4">
-      <div className="flex items-center gap-4">
+    <div className="flex items-center justify-between border-b pb-4 mx-3 my-3">
+      <div className="flex items-center gap-4 mt-2">
         <Image
           src={item.product.images[0]}
           alt={item.product.name}

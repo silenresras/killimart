@@ -117,7 +117,7 @@ export default function CheckoutPage() {
 
 
   return (
-    <div className="max-w-5xl mx-auto p-6 space-y-10">
+    <div className="max-w-5xl mx-auto p-6 space-y-10 bg-blue-50 rounded-xl mt-2">
       <h1 className="text-2xl font-bold">Checkout</h1>
 
       {/* Products */}
@@ -129,7 +129,7 @@ export default function CheckoutPage() {
               <li key={item.product._id} className="flex justify-between text-sm">
                 <Link
                   href={`/products/${item.product.slug}`}
-                  className="text-emerald-500 hover:underline"
+                  className="text-green-600 hover:underline"
                 >
                   {item.product.name} × {item.quantity}
                 </Link>
@@ -156,7 +156,7 @@ export default function CheckoutPage() {
       <div className="border p-4 rounded-lg shadow-sm">
         <div className="flex justify-between items-center">
           <h2 className="text-lg font-semibold">Shipping Information</h2>
-          <Link href="/myaccount/overview" className="text-emerald-500 text-sm hover:underline">
+          <Link href="/myaccount/overview" className="text-green-600 text-sm hover:underline">
             View
           </Link>
         </div>
@@ -174,7 +174,7 @@ export default function CheckoutPage() {
         ) : (
           <p className="text-red-500 text-sm mt-3">
             No shipping address found. Please{" "}
-            <Link href="/myaccount/overview" className="underline text-emerald-500">
+            <Link href="/myaccount/overview" className="underline text-green-600">
               add one
             </Link>
           </p>
@@ -190,7 +190,7 @@ export default function CheckoutPage() {
         </div>
         <div className="flex justify-between text-sm">
           <span>Shipping Fee</span>
-          {!defaultAddress ? <Link href="/myaccount/overview" className='text-emerald-500 font-semibold'>Add Shipping Address to Process Your Shipping Fee</Link>
+          {!defaultAddress ? <Link href="/myaccount/overview" className='text-green-600 font-semibold'>Add Shipping Address to Process Your Shipping Fee</Link>
             : <span className="text-gray-600">+ KSh {shippingFee.toLocaleString()}</span>}
         </div>
         <hr />
@@ -203,7 +203,7 @@ export default function CheckoutPage() {
           onClick={handlePlaceOrder}
           disabled={!defaultAddress || isLoading || products.length === 0}
           className={`w-full mt-4 py-2 rounded ${defaultAddress && !isLoading && products.length > 0
-            ? 'bg-emerald-600 hover:bg-emerald-500'
+            ? 'bg-green-600 hover:bg-green-500'
             : 'bg-gray-400 cursor-not-allowed'
             } text-white`}
         >

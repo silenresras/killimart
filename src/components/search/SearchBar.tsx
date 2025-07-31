@@ -91,11 +91,11 @@ export default function SearchBar() {
                         setShowDropdown(true);
                     }}
                     placeholder="Search electronics..."
-                    className="w-full border-2 border-emerald-500 rounded-md px-4 py-2 pr-12 focus:outline-none"
+                    className="w-full border-2 border-green-600 rounded-md px-4 py-2 pr-12 focus:outline-none"
                 />
                 <button
                     type="submit"
-                    className="absolute right-0 top-0 bottom-0 px-4 bg-emerald-500 rounded-r-md hover:bg-emerald-600 transition-colors"
+                    className="absolute right-0 top-0 bottom-0 px-4 bg-green-600 rounded-r-md hover:bg-green-500 transition-colors"
                 >
                     <FaSearch className="text-white" />
                 </button>
