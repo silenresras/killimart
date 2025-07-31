@@ -122,7 +122,7 @@ export default function ProductDetailPage() {
 
       {/* Right: Details */}
       <div className="space-y-4">
-        <h1 className="text-2xl font-bold">{product.name}</h1>
+        <h1 className="text-2xl font-bold sm:text-xl md:text-xl text-slate-900 dark:text-slate-100">{product.name}</h1>
         <p className="text-lg text-green-600 font-semibold">
           KES {product.price.toLocaleString()}
         </p>
@@ -133,18 +133,18 @@ export default function ProductDetailPage() {
 
         {/* Quantity selector */}
         <div className="flex items-center gap-4 mt-4">
-          <span className="font-medium">Quantity:</span>
+          <span className="font-medium text-slate-900 dark:text-slate-100">Quantity:</span>
           <div className="flex items-center gap-2">
             <button
               onClick={decreaseQty}
-              className="px-3 py-1 border rounded text-lg font-bold"
+              className="px-3 py-1 border rounded text-lg font-bold text-slate-900 dark:text-slate-100"
             >
               -
             </button>
-            <span className="w-8 text-center">{quantity}</span>
+            <span className="w-8 text-center text-slate-900 dark:text-slate-100">{quantity}</span>
             <button
               onClick={increaseQty}
-              className="px-3 py-1 border rounded text-lg font-bold"
+              className="px-3 py-1 border rounded text-lg font-bold text-slate-900 dark:text-slate-100"
             >
               +
             </button>
