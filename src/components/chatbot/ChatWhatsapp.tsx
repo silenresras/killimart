@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { BsWhatsapp } from "react-icons/bs";
 
 const WHATSAPP_NUMBER = "254757378874";
-const WHATSAPP_MESSAGE = encodeURIComponent("Hi, I have a question about an item on Killimart.");
+const WHATSAPP_MESSAGE = encodeURIComponent("Hi, I have a question about an item on SmartKenya.");
 
 export default function ChatWhatsapp() {
   const [mounted, setMounted] = useState(false);
