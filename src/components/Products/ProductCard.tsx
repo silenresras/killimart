@@ -22,7 +22,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           />
         </div>
         <div className="px-3 py-2 flex flex-col flex-grow">
-          <h3 className="text-sm font-medium leading-snug line-clamp-2 min-h-[3.5rem] text-slate-900 dark:text-slate-100">
+          <h3 className="text-sm font-medium leading-snug line-clamp-2 min-h-[3.5rem] text-black">
             {product.name}
           </h3>
           <div className="mt-auto text-sm font-bold text-emerald-600">

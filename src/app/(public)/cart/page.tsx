@@ -35,13 +35,13 @@ export default function CartPage() {
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-blue-50 rounded-xl mt-2">
-      <h1 className="text-2xl font-bold mb-6">Your Cart</h1>
+      <h1 className="text-2xl font-bold mb-6 text-black">Your Cart</h1>
       <div className="space-y-4 bg-white rounded-xl">
         {cart.map((item) => (
           <CartItem key={item.product._id} item={item} />
         ))}
       </div>
-      <div className="mt-6 text-right text-xl font-semibold">
+      <div className="mt-6 text-right text-xl font-semibold text-black">
         Total: KES {total.toLocaleString()}
       </div>
       <div className="mt-4 flex justify-end gap-2">

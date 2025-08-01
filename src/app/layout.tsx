@@ -6,7 +6,7 @@ import ChatWhatsapp from "@/components/chatbot/ChatWhatsapp";
 
 import MaintenancePage from "@/components/maintanance/MaintainancePage";
 
-const MAINTENANCE_MODE = true; // ⛔ Set to false when ready
+const MAINTENANCE_MODE = false; // ⛔ Set to false when ready
 
 export const metadata = {
   title: "Killimart",

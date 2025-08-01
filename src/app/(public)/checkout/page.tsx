@@ -49,6 +49,7 @@ export default function CheckoutPage() {
     0
   );
   const totalPrice = productTotal + shippingFee;
+  const totalPriceWithoutShippingAddress = productTotal;
 
   // Fetch addresses on mount
   useEffect(() => {
@@ -146,8 +147,8 @@ export default function CheckoutPage() {
 
       {/* Payment Method */}
       <div className="border p-4 rounded-lg shadow-sm">
-        <h2 className="text-lg font-semibold mb-2">Payment Method</h2>
-        <p className="text-sm text-gray-700">
+        <h2 className="text-lg font-semibold mb-2 text-black">Payment Method</h2>
+        <p className="text-sm text-black">
           M-PESA (Only supported method currently)
         </p>
       </div>
@@ -155,16 +156,16 @@ export default function CheckoutPage() {
       {/* Shipping Information */}
       <div className="border p-4 rounded-lg shadow-sm">
         <div className="flex justify-between items-center">
-          <h2 className="text-lg font-semibold">Shipping Information</h2>
+          <h2 className="text-lg font-semibold text-black">Shipping Information</h2>
           <Link href="/myaccount/overview" className="text-green-600 text-sm hover:underline">
             View
           </Link>
         </div>
 
         {addressLoading ? (
-          <p className="text-sm text-gray-600 mt-3">Loading address...</p>
+          <p className="text-sm text-black mt-3">Loading address...</p>
         ) : defaultAddress ? (
-          <div className="mt-3 text-sm text-gray-700 space-y-1">
+          <div className="mt-3 text-sm text-black space-y-1">
             <p><strong>County:</strong> {defaultAddress.county}</p>
             <p><strong>Sub-County:</strong> {defaultAddress.subCounty}</p>
             <p><strong>Town:</strong> {defaultAddress.town}</p>
@@ -183,20 +184,21 @@ export default function CheckoutPage() {
 
       {/* Payment Summary */}
       <div className="border p-4 rounded-lg shadow-sm space-y-2">
-        <h2 className="text-lg font-semibold">Payment Summary</h2>
+        <h2 className="text-lg font-semibold text-black">Payment Summary</h2>
         <div className="flex justify-between text-sm">
-          <span>Product Amount</span>
-          <span>KSh {productTotal.toLocaleString()}</span>
+          <span className='text-black font-semibold'>Product Amount</span>
+          <span className='text-black font-semibold'>KSh {productTotal.toLocaleString()}</span>
         </div>
         <div className="flex justify-between text-sm">
-          <span>Shipping Fee</span>
+          <span className='text-black font-bold'>Shipping Fee</span>
           {!defaultAddress ? <Link href="/myaccount/overview" className='text-green-600 font-semibold'>Add Shipping Address to Process Your Shipping Fee</Link>
             : <span className="text-gray-600">+ KSh {shippingFee.toLocaleString()}</span>}
         </div>
         <hr />
-        <div className="flex justify-between font-bold text-base">
+        <div className="flex justify-between font-bold text-base text-black">
           <span>Total Amount</span>
-          <span>KSh {totalPrice.toLocaleString()}</span>
+          
+          <span>KSh {!defaultAddress ? totalPriceWithoutShippingAddress.toLocaleString() : totalPrice.toLocaleString()}</span>
         </div>
 
         <button

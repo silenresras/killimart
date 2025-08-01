@@ -33,7 +33,7 @@ export default function CartItem({ item }: { item: CartItemType }) {
         />
         <div>
           <h3 className="font-medium">{item.product.name}</h3>
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-black font-semibold">
             KES {item.product.price.toLocaleString()} ×
             <input
               type="number"
