@@ -8,7 +8,7 @@ import MaintenancePage from "@/components/maintanance/MaintainancePage";
 import CookieConsent from "@/components/ui/CookieConsent";
 import UpdateNotification from "@/components/ui/UpdateNotification";
 
-const MAINTENANCE_MODE = true; // ⛔ Set to false when ready
+const MAINTENANCE_MODE = false; // ⛔ Set to false when ready
 
 export const metadata = {
   title: "Killimart",
