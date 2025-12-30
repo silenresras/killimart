@@ -40,8 +40,6 @@ const LoginPage = () => {
     // Open the backend endpoint in a new window/tab
     window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`;
   };
-  
-
   const handleNotImplemented = (provider: string) => {
     alert(`${provider} login is coming soon thank you for staying with us!`);
     // or use a toast library if installed
@@ -108,7 +106,9 @@ const LoginPage = () => {
           </button>
 
 
+
           {/*<Link
+          <Link
             href="/auth/reset-password"
             className="block text-center text-xs text-red-500 underline mt-1"
           >
@@ -128,6 +128,9 @@ const LoginPage = () => {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
           <button className="flex-1 border px-4 py-2 rounded text-sm flex items-center justify-center gap-2 hover:bg-gray-50" onClick={handleGoogleLogin}>
             <FaGoogle /> Google
+            </button>
+          <button className="flex-1 border px-4 py-2 rounded text-sm flex items-center justify-center gap-2 hover:bg-gray-50" onClick={() => handleNotImplemented("Google")}>
+            <FaGoogle /> Google  <span className="text-[10px] text-amber-500">(Coming Soon)</span>
           </button>
           <button className="flex-1 border px-4 py-2 rounded text-sm flex items-center justify-center gap-2 hover:bg-gray-50" onClick={() => handleNotImplemented("Facebook")}>
             <FaFacebook /> Facebook <span className="text-[10px] text-amber-500">(Coming Soon)</span>

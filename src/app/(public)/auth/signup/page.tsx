@@ -29,6 +29,9 @@ const SignupPage = () => {
       toast.success("Signup successful!!.");
       localStorage.setItem("pendingEmail", email);
       router.push("/auth/login");
+      toast.success("Signup successful! Please check your email.");
+      localStorage.setItem("pendingEmail", email);
+      router.push("/auth/confirm-email");
     } catch {
       // Error already handled in AuthStore
       if (error) {
@@ -129,6 +132,9 @@ const SignupPage = () => {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
           <button onClick={handleGoogleSignup} className="flex-1 border px-4 py-2 rounded text-sm flex items-center justify-center gap-2 hover:bg-gray-50">
             <FaGoogle />
+            </button>
+          <button onClick={() => handleNotImplemented("Google")} className="flex-1 border px-4 py-2 rounded text-sm flex items-center justify-center gap-2 hover:bg-gray-50">
+            <FaGoogle /> Google <span className="text-[10px] text-amber-500">(Coming Soon)</span>
           </button>
           <button onClick={() => handleNotImplemented("Facebook")} className="flex-1 border px-4 py-2 rounded text-sm flex items-center justify-center gap-2 hover:bg-gray-50">
             <FaFacebook /> Facebook <span className="text-[10px] text-amber-500">(Coming Soon)</span>
